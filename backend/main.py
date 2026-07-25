@@ -13,6 +13,8 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 import config
 from models.schemas import (
@@ -113,6 +115,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 静态文件服务 - 前端页面
+_PAGES_DIR = Path(__file__).resolve().parent.parent / "pages"
+if _PAGES_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(_PAGES_DIR)), name="static")
+
+    @app.get("/")
+    async def serve_index():
+        return FileResponse(str(_PAGES_DIR / "index.html"))
 
 
 # ============================================================
