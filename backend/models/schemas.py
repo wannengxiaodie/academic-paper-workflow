@@ -4,6 +4,8 @@ Pydantic 数据模型定义 - 定义所有API输入输出的数据结构。
 
 from __future__ import annotations
 
+from enum import Enum
+
 from pydantic import BaseModel, Field
 
 
@@ -237,3 +239,64 @@ class ApiResponse(BaseModel):
     success: bool = Field(default=True, description="是否成功")
     message: str = Field(default="", description="响应消息")
     data: dict | list | None = Field(default=None, description="响应数据")
+
+
+# ============================================================
+# 任务调度相关模型
+# ============================================================
+
+class TaskStatus(str, Enum):
+    """任务状态枚举"""
+    PENDING = "pending"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+    PAUSED = "paused"
+
+
+class TaskType(str, Enum):
+    """任务类型枚举"""
+    ONCE = "once"
+    CRON = "cron"
+
+
+class TaskDefinition(BaseModel):
+    """任务定义 - 创建任务时的输入"""
+    name: str = Field(..., description="任务名称")
+    task_type: TaskType = Field(default=TaskType.ONCE, description="任务类型：once/cron")
+    cron_expression: str = Field(default="", description="cron表达式（cron类型必填）")
+    run_at: str = Field(default="", description="一次性任务的执行时间（ISO格式，如 2026-07-25T10:00:00）")
+    target_endpoint: str = Field(..., description="目标API端点路径，如 /api/step1/journal-match")
+    payload: dict = Field(default_factory=dict, description="任务执行时的请求体")
+    description: str = Field(default="", description="任务描述")
+
+
+class TaskRecord(BaseModel):
+    """任务记录 - 任务的完整信息"""
+    task_id: str = Field(..., description="任务ID")
+    name: str = Field(..., description="任务名称")
+    task_type: TaskType = Field(..., description="任务类型")
+    cron_expression: str = Field(default="", description="cron表达式")
+    run_at: str = Field(default="", description="计划执行时间")
+    target_endpoint: str = Field(..., description="目标API端点")
+    payload: dict = Field(default_factory=dict, description="请求体")
+    description: str = Field(default="", description="任务描述")
+    status: TaskStatus = Field(default=TaskStatus.PENDING, description="任务状态")
+    created_at: str = Field(..., description="创建时间")
+    updated_at: str = Field(..., description="更新时间")
+    last_run_at: str = Field(default="", description="上次执行时间")
+    next_run_at: str = Field(default="", description="下次执行时间")
+    run_count: int = Field(default=0, description="执行次数")
+    last_result: dict | None = Field(default=None, description="上次执行结果")
+    last_error: str = Field(default="", description="上次错误信息")
+
+
+class TaskUpdateRequest(BaseModel):
+    """任务更新请求"""
+    name: str | None = Field(default=None, description="任务名称")
+    cron_expression: str | None = Field(default=None, description="cron表达式")
+    run_at: str | None = Field(default=None, description="执行时间")
+    target_endpoint: str | None = Field(default=None, description="目标端点")
+    payload: dict | None = Field(default=None, description="请求体")
+    description: str | None = Field(default=None, description="任务描述")

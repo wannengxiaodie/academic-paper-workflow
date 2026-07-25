@@ -23,6 +23,9 @@ from models.schemas import (
     LiteratureSearchRequest,
     OutlineEvaluateRequest,
     PolishSubmitRequest,
+    TaskDefinition,
+    TaskStatus,
+    TaskUpdateRequest,
     WriteChapterRequest,
 )
 
@@ -79,8 +82,16 @@ async def lifespan(app: FastAPI):
     logger.info("医学职称论文写作自动化平台启动中...")
     logger.info(f"期刊数据库: {_get_journals_count()} 本期刊")
     logger.info(f"AI增强模式: {'已启用' if (config.API_KEY_OPENAI or config.API_KEY_ANTHROPIC) else '未启用'}")
+
+    from services.task_scheduler import set_base_url, start_scheduler, stop_scheduler
+    set_base_url("http://localhost:8000")
+    start_scheduler()
+    logger.info("任务调度器已启动")
+
     logger.info("服务就绪")
     yield
+    stop_scheduler()
+    logger.info("任务调度器已停止")
     logger.info("服务关闭")
 
 
@@ -464,6 +475,150 @@ async def health_check() -> dict:
         "version": "1.0.0",
         "journals_loaded": _get_journals_count(),
     }
+
+
+# ============================================================
+# 任务调度 API
+# ============================================================
+
+@app.post("/api/tasks", response_model=ApiResponse)
+async def create_task_endpoint(request: TaskDefinition) -> ApiResponse:
+    """创建定时任务。"""
+    from services.task_scheduler import create_scheduled_task
+
+    if request.task_type.value == "cron" and not request.cron_expression:
+        return ApiResponse(success=False, message="cron类型任务必须提供cron表达式")
+    if request.task_type.value == "once" and not request.run_at:
+        return ApiResponse(success=False, message="一次性任务必须提供执行时间run_at")
+
+    try:
+        task = create_scheduled_task(request)
+        return ApiResponse(
+            success=True,
+            message=f"任务创建成功: {task.name}",
+            data={"task": task.model_dump()},
+        )
+    except Exception as e:
+        logger.error(f"创建任务失败: {e}")
+        return ApiResponse(success=False, message=f"创建任务失败: {str(e)}")
+
+
+@app.get("/api/tasks", response_model=ApiResponse)
+async def list_tasks_endpoint(status: str | None = None) -> ApiResponse:
+    """获取任务列表，可按状态筛选。"""
+    from data.task_store import list_tasks
+
+    status_enum = None
+    if status:
+        try:
+            status_enum = TaskStatus(status)
+        except ValueError:
+            return ApiResponse(success=False, message=f"无效的任务状态: {status}")
+
+    tasks = list_tasks(status_enum)
+    return ApiResponse(
+        success=True,
+        message=f"查询到 {len(tasks)} 个任务",
+        data={"tasks": [t.model_dump() for t in tasks]},
+    )
+
+
+@app.get("/api/tasks/{task_id}", response_model=ApiResponse)
+async def get_task_endpoint(task_id: str) -> ApiResponse:
+    """获取单个任务详情。"""
+    from data.task_store import get_task
+
+    task = get_task(task_id)
+    if not task:
+        return ApiResponse(success=False, message=f"任务不存在: {task_id}")
+    return ApiResponse(success=True, message="查询成功", data={"task": task.model_dump()})
+
+
+@app.put("/api/tasks/{task_id}", response_model=ApiResponse)
+async def update_task_endpoint(task_id: str, request: TaskUpdateRequest) -> ApiResponse:
+    """更新任务配置。"""
+    from data.task_store import get_task, update_task
+    from services.task_scheduler import _schedule_next_cron_run
+
+    task = get_task(task_id)
+    if not task:
+        return ApiResponse(success=False, message=f"任务不存在: {task_id}")
+
+    update_data = request.model_dump(exclude_none=True)
+    if not update_data:
+        return ApiResponse(success=False, message="没有提供要更新的字段")
+
+    updated = update_task(task_id, **update_data)
+
+    if updated and updated.task_type.value == "cron" and "cron_expression" in update_data:
+        _schedule_next_cron_run(task_id)
+
+    return ApiResponse(
+        success=True,
+        message="任务更新成功",
+        data={"task": updated.model_dump() if updated else None},
+    )
+
+
+@app.delete("/api/tasks/{task_id}", response_model=ApiResponse)
+async def delete_task_endpoint(task_id: str) -> ApiResponse:
+    """删除任务。"""
+    from services.task_scheduler import remove_task
+
+    success = remove_task(task_id)
+    if not success:
+        return ApiResponse(success=False, message=f"任务不存在: {task_id}")
+    return ApiResponse(success=True, message="任务删除成功")
+
+
+@app.post("/api/tasks/{task_id}/trigger", response_model=ApiResponse)
+async def trigger_task_endpoint(task_id: str) -> ApiResponse:
+    """立即触发任务执行。"""
+    from services.task_scheduler import trigger_task
+
+    task = trigger_task(task_id)
+    if not task:
+        return ApiResponse(success=False, message=f"任务不存在: {task_id}")
+    return ApiResponse(success=True, message=f"任务已触发: {task.name}")
+
+
+@app.post("/api/tasks/{task_id}/pause", response_model=ApiResponse)
+async def pause_task_endpoint(task_id: str) -> ApiResponse:
+    """暂停任务。"""
+    from services.task_scheduler import pause_task
+
+    task = pause_task(task_id)
+    if not task:
+        return ApiResponse(success=False, message=f"任务不存在: {task_id}")
+    return ApiResponse(
+        success=True,
+        message=f"任务已暂停: {task.name}",
+        data={"task": task.model_dump()},
+    )
+
+
+@app.post("/api/tasks/{task_id}/resume", response_model=ApiResponse)
+async def resume_task_endpoint(task_id: str) -> ApiResponse:
+    """恢复任务。"""
+    from services.task_scheduler import resume_task
+
+    task = resume_task(task_id)
+    if not task:
+        return ApiResponse(success=False, message=f"任务不存在: {task_id}")
+    return ApiResponse(
+        success=True,
+        message=f"任务已恢复: {task.name}",
+        data={"task": task.model_dump()},
+    )
+
+
+@app.get("/api/scheduler/status", response_model=ApiResponse)
+async def scheduler_status_endpoint() -> ApiResponse:
+    """获取调度器状态。"""
+    from services.task_scheduler import get_scheduler_status
+
+    status = get_scheduler_status()
+    return ApiResponse(success=True, message="调度器状态查询成功", data=status)
 
 
 # ============================================================

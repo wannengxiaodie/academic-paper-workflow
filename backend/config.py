@@ -121,3 +121,12 @@ AI_FALLBACK_ENABLED: bool = True  # 当AI API不可用时是否使用降级策�
 AI_REQUEST_TIMEOUT: int = 60  # 秒
 AI_MAX_RETRIES: int = 3
 AI_RETRY_DELAY: float = 1.0  # 秒
+
+# ============================================================
+# 任务调度配置
+# ============================================================
+TASK_SCHEDULER_ENABLED: bool = True  # 是否启用任务调度器
+TASK_SCHEDULER_INTERVAL: int = 5  # 调度器检查间隔（秒）
+TASK_SCHEDULER_BASE_URL: str = os.getenv("TASK_SCHEDULER_BASE_URL", "http://localhost:8000")
+TASK_MAX_RETRIES: int = 3  # 任务最大重试次数
+TASK_TIMEOUT: int = 300  # 任务执行超时时间（秒）
