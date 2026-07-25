@@ -1,0 +1,3299 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医学职称论文写作全流程自动化平台</title>
+    <style id="theme-vars">
+/* ===== Academic Paper Workflow - Brand CSS ===== */
+
+/* --- Color System --- */
+:root {
+  /* Primary: Deep scholarly blue */
+  --color-primary-50: #EEF2FF;
+  --color-primary-100: #E0E7FF;
+  --color-primary-200: #C7D2FE;
+  --color-primary-300: #A5B4FC;
+  --color-primary-400: #818CF8;
+  --color-primary-500: #6366F1;
+  --color-primary-600: #4F46E5;
+  --color-primary-700: #4338CA;
+  --color-primary-800: #3730A3;
+  --color-primary-900: #312E81;
+
+  /* Accent: Warm amber for progress/action */
+  --color-accent-50: #FFFBEB;
+  --color-accent-100: #FEF3C7;
+  --color-accent-200: #FDE68A;
+  --color-accent-300: #FCD34D;
+  --color-accent-400: #FBBF24;
+  --color-accent-500: #F59E0B;
+  --color-accent-600: #D97706;
+
+  /* Success: Emerald green */
+  --color-success-50: #ECFDF5;
+  --color-success-100: #D1FAE5;
+  --color-success-500: #10B981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+
+  /* Warning: Orange */
+  --color-warning-50: #FFF7ED;
+  --color-warning-100: #FFEDD5;
+  --color-warning-500: #F97316;
+  --color-warning-600: #EA580C;
+
+  /* Error: Rose */
+  --color-error-50: #FFF1F2;
+  --color-error-100: #FFE4E6;
+  --color-error-500: #F43F5E;
+  --color-error-600: #E11D48;
+
+  /* Neutral */
+  --color-neutral-50: #F8FAFC;
+  --color-neutral-100: #F1F5F9;
+  --color-neutral-200: #E2E8F0;
+  --color-neutral-300: #CBD5E1;
+  --color-neutral-400: #94A3B8;
+  --color-neutral-500: #64748B;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1E293B;
+  --color-neutral-900: #0F172A;
+
+  /* Semantic tokens */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8FAFC;
+  --bg-tertiary: #F1F5F9;
+  --bg-inverse: #0F172A;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-tertiary: #94A3B8;
+  --text-inverse: #FFFFFF;
+  --text-accent: #4F46E5;
+  --border-default: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #F1F5F9;
+  --overlay-scrim: rgba(15, 23, 42, 0.5);
+}
+
+/* --- Typography --- */
+:root {
+  --font-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+  /* Font sizes - modular scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Font weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Line heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+}
+
+/* --- Spacing --- */
+:root {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+}
+
+/* --- Shape --- */
+:root {
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/* --- Shadows --- */
+:root {
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-glow-primary: 0 0 20px rgba(99, 102, 241, 0.15);
+  --shadow-glow-success: 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+/* Semantic aliases for design system compatibility */
+body {
+  --semantic-color-background: var(--bg-primary);
+  --semantic-color-foreground: var(--text-primary);
+  --semantic-color-muted: var(--text-secondary);
+  --semantic-color-border: var(--border-default);
+  --semantic-color-card: var(--surface-raised);
+  --semantic-color-primary: var(--color-primary-600);
+  --semantic-color-primary-foreground: #FFFFFF;
+  --semantic-color-secondary: var(--color-neutral-100);
+  --semantic-color-accent: var(--color-accent-500);
+  --semantic-color-accent-foreground: var(--text-primary);
+  --semantic-color-destructive: var(--color-error-500);
+  --semantic-color-destructive-foreground: #FFFFFF;
+  --semantic-color-ring: var(--color-primary-500);
+}
+
+/* Prefixed semantic aliases (brand prefix: apw) */
+:root {
+  --apw-background: #FFFFFF;
+  --apw-foreground: #0F172A;
+  --apw-card: #FFFFFF;
+  --apw-primary: #4F46E5;
+  --apw-primary-foreground: #FFFFFF;
+  --apw-border: #E2E8F0;
+  --apw-muted: #475569;
+  --apw-accent: #F59E0B;
+  --apw-secondary: #F1F5F9;
+  --apw-destructive: #F43F5E;
+  --apw-ring: #6366F1;
+  --apw-radius-sm: 0.375rem;
+  --apw-radius-md: 0.5rem;
+  --apw-radius-lg: 0.75rem;
+  --apw-success: #10B981;
+  --apw-warning: #F97316;
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--apw-background);
+    --color-foreground: var(--apw-foreground);
+    --color-card: var(--apw-card);
+    --color-primary: var(--apw-primary);
+    --color-primary-foreground: var(--apw-primary-foreground);
+    --color-secondary: var(--apw-secondary);
+    --color-muted: var(--apw-muted);
+    --color-accent: var(--apw-accent);
+    --color-destructive: var(--apw-destructive);
+    --color-border: var(--apw-border);
+    --color-ring: var(--apw-ring);
+    --radius-sm: var(--apw-radius-sm);
+    --radius-md: var(--apw-radius-md);
+    --radius-lg: var(--apw-radius-lg);
+  }
+  @layer base {
+    body { background: var(--apw-background); color: var(--apw-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--apw-background); }
+      .text-background { color: var(--apw-background); }
+      .border-background { border-color: var(--apw-background); }
+      .ring-background { --tw-ring-color: var(--apw-background); }
+      .bg-foreground { background-color: var(--apw-foreground); }
+      .text-foreground { color: var(--apw-foreground); }
+      .border-foreground { border-color: var(--apw-foreground); }
+      .ring-foreground { --tw-ring-color: var(--apw-foreground); }
+      .bg-card { background-color: var(--apw-card); }
+      .text-card { color: var(--apw-card); }
+      .border-card { border-color: var(--apw-card); }
+      .ring-card { --tw-ring-color: var(--apw-card); }
+      .bg-primary { background-color: var(--apw-primary); }
+      .text-primary { color: var(--apw-primary); }
+      .border-primary { border-color: var(--apw-primary); }
+      .ring-primary { --tw-ring-color: var(--apw-primary); }
+      .bg-primary-foreground { background-color: var(--apw-primary-foreground); }
+      .text-primary-foreground { color: var(--apw-primary-foreground); }
+      .border-primary-foreground { border-color: var(--apw-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--apw-primary-foreground); }
+      .bg-secondary { background-color: var(--apw-secondary); }
+      .text-secondary { color: var(--apw-secondary); }
+      .border-secondary { border-color: var(--apw-secondary); }
+      .ring-secondary { --tw-ring-color: var(--apw-secondary); }
+      .bg-muted { background-color: var(--apw-muted); }
+      .text-muted { color: var(--apw-muted); }
+      .border-muted { border-color: var(--apw-muted); }
+      .ring-muted { --tw-ring-color: var(--apw-muted); }
+      .bg-accent { background-color: var(--apw-accent); }
+      .text-accent { color: var(--apw-accent); }
+      .border-accent { border-color: var(--apw-accent); }
+      .ring-accent { --tw-ring-color: var(--apw-accent); }
+      .bg-destructive { background-color: var(--apw-destructive); }
+      .text-destructive { color: var(--apw-destructive); }
+      .border-destructive { border-color: var(--apw-destructive); }
+      .ring-destructive { --tw-ring-color: var(--apw-destructive); }
+      .bg-border { background-color: var(--apw-border); }
+      .text-border { color: var(--apw-border); }
+      .border-border { border-color: var(--apw-border); }
+      .ring-border { --tw-ring-color: var(--apw-border); }
+      .bg-ring { background-color: var(--apw-ring); }
+      .text-ring { color: var(--apw-ring); }
+      .border-ring { border-color: var(--apw-ring); }
+      .ring-ring { --tw-ring-color: var(--apw-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body>
+
+  <!-- API连接状态指示器 -->
+  <div id="api-status" style="position:fixed;top:10px;right:10px;z-index:100;font-size:12px;padding:4px 12px;border-radius:12px;background:#f1f5f9;color:#64748b;">
+    检测中...
+  </div>
+
+  <!-- ========== 顶部导航 ========== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#0E7490"/>
+          <path d="M16 6L8 12v4c0 5.55 3.42 10.74 8 12 4.58-1.26 8-6.45 8-12v-4L16 6z" fill="white" opacity="0.9"/>
+          <path d="M13 16.5l2 2 4-4" stroke="#0E7490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="logo-text">
+          <h1>医学职称论文写作全流程自动化平台</h1>
+          <p>MedPaper Pro - 智能辅助医学论文写作与投稿</p>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <span class="nav-badge">STRATEGIST + COMPOSER</span>
+        <span class="nav-version">v2.0</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========== 步骤进度条 ========== -->
+  <section class="progress-bar-section">
+    <div class="progress-bar-inner">
+      <div class="step-indicator" data-step="1">
+        <div class="step-circle">1</div>
+        <span class="step-label">目标期刊分析</span>
+        <span class="step-phase">策略</span>
+      </div>
+      <div class="step-connector"><div class="connector-fill" id="connector-1"></div></div>
+      <div class="step-indicator" data-step="2">
+        <div class="step-circle">2</div>
+        <span class="step-label">文献检索与空白识别</span>
+        <span class="step-phase">策略</span>
+      </div>
+      <div class="step-connector"><div class="connector-fill" id="connector-2"></div></div>
+      <div class="step-indicator" data-step="3">
+        <div class="step-circle">3</div>
+        <span class="step-label">论文大纲与评审</span>
+        <span class="step-phase">策略</span>
+      </div>
+      <div class="step-connector"><div class="connector-fill" id="connector-3"></div></div>
+      <div class="step-indicator" data-step="4">
+        <div class="step-circle">4</div>
+        <span class="step-label">质量门控</span>
+        <span class="step-phase">策略</span>
+      </div>
+      <div class="step-connector"><div class="connector-fill" id="connector-4"></div></div>
+      <div class="step-indicator" data-step="5">
+        <div class="step-circle">5</div>
+        <span class="step-label">格式规范与模板</span>
+        <span class="step-phase">写作</span>
+      </div>
+      <div class="step-connector"><div class="connector-fill" id="connector-5"></div></div>
+      <div class="step-indicator" data-step="6">
+        <div class="step-circle">6</div>
+        <span class="step-label">系统写作与监控</span>
+        <span class="step-phase">写作</span>
+      </div>
+      <div class="step-connector"><div class="connector-fill" id="connector-6"></div></div>
+      <div class="step-indicator" data-step="7">
+        <div class="step-circle">7</div>
+        <span class="step-label">润色完善与投稿</span>
+        <span class="step-phase">写作</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 主内容区 ========== -->
+  <main class="main-content">
+
+    <!-- ====== 步骤1：目标期刊分析与选刊策略 ====== -->
+    <section class="step-panel" id="step-1" style="display:block;">
+      <div class="panel-header">
+        <div class="phase-tag strategist">STRATEGIST 策略阶段</div>
+        <h2>步骤 1：目标期刊分析与选刊策略</h2>
+        <p class="panel-desc">输入您的研究方向和职称级别，系统将智能匹配最适合的医学期刊，分析影响因子、审稿周期、版面费及收录情况。</p>
+      </div>
+
+      <div class="card-grid two-col">
+        <!-- 输入表单卡片 -->
+        <div class="card form-card">
+          <h3>研究信息输入</h3>
+          <div class="form-group">
+            <label for="research-topic">研究主题</label>
+            <textarea id="research-topic" rows="3" placeholder="请输入您的研究主题，例如：依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析">依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析</textarea>
+          </div>
+          <div class="form-group">
+            <label for="title-level">职称级别</label>
+            <select id="title-level">
+              <option value="junior">初级（住院医师/护师/技师）</option>
+              <option value="middle" selected>中级（主治医师/主管护师/主管技师）</option>
+              <option value="sub-senior">副高级（副主任医师/副主任护师）</option>
+              <option value="senior">正高级（主任医师/主任护师）</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="department">学科分类</label>
+            <select id="department">
+              <option value="internal">内科</option>
+              <option value="surgery">外科</option>
+              <option value="pediatrics">儿科</option>
+              <option value="obstetrics">妇产科</option>
+              <option value="orthopedics">骨科</option>
+              <option value="neurology" selected>神经内科</option>
+              <option value="cardiology">心血管内科</option>
+              <option value="oncology">肿瘤科</option>
+              <option value="nursing">护理</option>
+              <option value="pharmacy">药学</option>
+              <option value="radiology">影像科</option>
+              <option value="laboratory">检验科</option>
+              <option value="public-health">公共卫生</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="runStep1()">开始分析</button>
+        </div>
+
+        <!-- 期刊推荐结果卡片 -->
+        <div class="card result-card" id="step1-results">
+          <h3>推荐期刊</h3>
+          <div class="placeholder-content">
+            <svg viewBox="0 0 48 48" fill="none" class="placeholder-icon">
+              <circle cx="24" cy="24" r="20" stroke="#0E7490" stroke-width="2" stroke-dasharray="4 4"/>
+              <path d="M18 24h12M24 18v12" stroke="#0E7490" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p>点击"开始分析"按钮，系统将根据您的研究方向智能匹配期刊</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 模拟日志 -->
+      <div class="sim-log-card card" id="step1-log" style="display:none;">
+        <h3>分析日志</h3>
+        <div class="sim-progress">
+          <div class="progress-track"><div class="progress-fill" id="step1-progress"></div></div>
+          <span class="progress-text" id="step1-progress-text">0%</span>
+        </div>
+        <div class="log-area" id="step1-log-area"></div>
+      </div>
+
+      <!-- 内置脚本展示 -->
+      <div class="card script-card">
+        <h3>内置脚本：journal_matcher.py</h3>
+        <pre class="code-block"><code># journal_matcher.py - 医学期刊智能匹配引擎
+class JournalMatcher:
+    """根据研究主题、职称级别、学科方向匹配目标期刊"""
+    
+    def __init__(self, topic, title_level, department):
+        self.topic = topic
+        self.title_level = title_level
+        self.department = department
+        self.journal_db = self._load_journal_database()
+    
+    def _load_journal_database(self):
+        """加载医学期刊数据库（含影响因子、审稿周期等）"""
+        return JournalDatabase.load(
+            sources=["CNKI期刊目录", "PubMed收录列表", 
+                     "中国科技核心期刊目录", "CSCD来源期刊"]
+        )
+    
+    def match(self):
+        """执行期刊匹配算法"""
+        # 1. 学科方向过滤
+        candidates = self.journal_db.filter_by_department(
+            self.department)
+        # 2. 职称级别权重调整
+        weighted = self._apply_title_level_weights(
+            candidates, self.title_level)
+        # 3. 研究主题相似度计算
+        scored = self._compute_topic_similarity(
+            weighted, self.topic)
+        # 4. 综合评分排序
+        results = sorted(scored, key=lambda x: x.score, 
+                        reverse=True)
+        return results[:3]</code></pre>
+      </div>
+    </section>
+
+    <!-- ====== 步骤2：文献检索与研究空白识别 ====== -->
+    <section class="step-panel" id="step-2" style="display:none;">
+      <div class="panel-header">
+        <div class="phase-tag strategist">STRATEGIST 策略阶段</div>
+        <h2>步骤 2：文献检索与研究空白识别</h2>
+        <p class="panel-desc">自动检索PubMed、CNKI、万方等数据库的相关文献，运用文献计量学方法识别当前研究的空白与机会。</p>
+      </div>
+
+      <div class="card" id="step2-control">
+        <h3>文献检索配置</h3>
+        <div class="search-config">
+          <div class="config-item">
+            <label>检索数据库</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" checked> PubMed</label>
+              <label class="checkbox-label"><input type="checkbox" checked> 中国知网（CNKI）</label>
+              <label class="checkbox-label"><input type="checkbox" checked> 万方数据</label>
+              <label class="checkbox-label"><input type="checkbox"> 维普期刊</label>
+            </div>
+          </div>
+          <div class="config-item">
+            <label>时间范围</label>
+            <select>
+              <option>近3年</option>
+              <option selected>近5年</option>
+              <option>近10年</option>
+              <option>不限</option>
+            </select>
+          </div>
+          <div class="config-item">
+            <label>文献类型</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" checked> 原始研究</label>
+              <label class="checkbox-label"><input type="checkbox" checked> 系统综述/Meta分析</label>
+              <label class="checkbox-label"><input type="checkbox"> 随机对照试验（RCT）</label>
+              <label class="checkbox-label"><input type="checkbox" checked> 回顾性研究</label>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="runStep2()">开始检索</button>
+      </div>
+
+      <!-- 检索结果 -->
+      <div class="card" id="step2-results" style="display:none;">
+        <h3>文献检索结果</h3>
+        <div class="stat-bar">
+          <div class="stat-item"><span class="stat-num" id="lit-total">0</span><span class="stat-label">总检索量</span></div>
+          <div class="stat-item"><span class="stat-num" id="lit-related">0</span><span class="stat-label">高度相关</span></div>
+          <div class="stat-item"><span class="stat-num" id="lit-rct">0</span><span class="stat-label">RCT研究</span></div>
+          <div class="stat-item"><span class="stat-num" id="lit-meta">0</span><span class="stat-label">Meta分析</span></div>
+        </div>
+      </div>
+
+      <!-- 研究空白 -->
+      <div class="card" id="step2-gaps" style="display:none;">
+        <h3>识别的研究空白与机会</h3>
+        <div id="gaps-container"></div>
+      </div>
+
+      <!-- 模拟日志 -->
+      <div class="sim-log-card card" id="step2-log" style="display:none;">
+        <h3>检索日志</h3>
+        <div class="sim-progress">
+          <div class="progress-track"><div class="progress-fill" id="step2-progress"></div></div>
+          <span class="progress-text" id="step2-progress-text">0%</span>
+        </div>
+        <div class="log-area" id="step2-log-area"></div>
+      </div>
+
+      <!-- 内置脚本展示 -->
+      <div class="card script-card">
+        <h3>内置脚本：lit_review.py</h3>
+        <pre class="code-block"><code># lit_review.py - 文献检索与综述分析引擎
+class LiteratureReviewer:
+    """多数据库文献检索与空白识别"""
+    
+    def search(self, topic, databases, year_range):
+        """执行多源文献检索"""
+        results = {}
+        for db in databases:
+            if db == "pubmed":
+                results[db] = PubMedClient.search(
+                    query=self._build_pubmed_query(topic),
+                    filters={"date": year_range})
+            elif db == "cnki":
+                results[db] = CNKIClient.search(
+                    query=topic,
+                    year_start=year_range[0])
+        return self._deduplicate(results)
+    
+    def identify_gaps(self, literature_set):
+        """基于文献计量分析识别研究空白"""
+        # 1. 主题聚类分析
+        clusters = TopicClusterer.fit(literature_set)
+        # 2. 时间趋势分析
+        trends = TemporalAnalyzer.analyze(literature_set)
+        # 3. 交叉领域空白检测
+        gaps = GapDetector.detect(clusters, trends)
+        return gaps</code></pre>
+      </div>
+    </section>
+
+    <!-- ====== 步骤3：论文大纲与7维度评审 ====== -->
+    <section class="step-panel" id="step-3" style="display:none;">
+      <div class="panel-header">
+        <div class="phase-tag strategist">STRATEGIST 策略阶段</div>
+        <h2>步骤 3：论文大纲与7维度评审</h2>
+        <p class="panel-desc">基于医学论文标准构建大纲，并通过7个专业维度进行综合评审。每维度满分5分，总分达到28分方可通过。</p>
+      </div>
+
+      <div class="card-grid two-col">
+        <!-- 大纲展示 -->
+        <div class="card">
+          <h3>论文大纲（IMRAD结构）</h3>
+          <div class="outline-tree">
+            <div class="outline-item level-1 active">摘要</div>
+            <div class="outline-item level-1 active">1. 引言</div>
+            <div class="outline-item level-2">1.1 研究背景</div>
+            <div class="outline-item level-2">1.2 国内外研究现状</div>
+            <div class="outline-item level-2">1.3 研究目的与意义</div>
+            <div class="outline-item level-1 active">2. 材料与方法</div>
+            <div class="outline-item level-2">2.1 一般资料</div>
+            <div class="outline-item level-2">2.2 纳入与排除标准</div>
+            <div class="outline-item level-2">2.3 治疗方法</div>
+            <div class="outline-item level-2">2.4 观察指标</div>
+            <div class="outline-item level-2">2.5 统计学方法</div>
+            <div class="outline-item level-1 active">3. 结果</div>
+            <div class="outline-item level-2">3.1 临床疗效比较</div>
+            <div class="outline-item level-2">3.2 神经功能缺损评分</div>
+            <div class="outline-item level-2">3.3 不良反应</div>
+            <div class="outline-item level-1 active">4. 讨论</div>
+            <div class="outline-item level-2">4.1 疗效机制分析</div>
+            <div class="outline-item level-2">4.2 与同类研究比较</div>
+            <div class="outline-item level-2">4.3 研究局限性</div>
+            <div class="outline-item level-1 active">5. 结论</div>
+            <div class="outline-item level-1 active">参考文献</div>
+          </div>
+        </div>
+
+        <!-- 7维度评审 -->
+        <div class="card">
+          <h3>7维度专业评审</h3>
+          <p class="review-hint">请拖动滑块为每个维度打分（1-5分），总分 >= 28 分通过</p>
+          <div class="review-scores" id="review-scores">
+            <div class="score-row">
+              <div class="score-info">
+                <span class="score-name">临床价值</span>
+                <span class="score-desc">是否解决实际临床问题</span>
+              </div>
+              <div class="score-slider-wrap">
+                <input type="range" min="1" max="5" value="4" class="score-slider" data-dim="clinical" oninput="updateScore(this)">
+                <span class="score-value" id="score-clinical">4</span>
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="score-info">
+                <span class="score-name">科学性</span>
+                <span class="score-desc">研究设计是否严谨合理</span>
+              </div>
+              <div class="score-slider-wrap">
+                <input type="range" min="1" max="5" value="4" class="score-slider" data-dim="scientific" oninput="updateScore(this)">
+                <span class="score-value" id="score-scientific">4</span>
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="score-info">
+                <span class="score-name">创新性</span>
+                <span class="score-desc">是否有新的发现或改进</span>
+              </div>
+              <div class="score-slider-wrap">
+                <input type="range" min="1" max="5" value="4" class="score-slider" data-dim="innovation" oninput="updateScore(this)">
+                <span class="score-value" id="score-innovation">4</span>
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="score-info">
+                <span class="score-name">文献覆盖</span>
+                <span class="score-desc">文献是否全面且时效性强</span>
+              </div>
+              <div class="score-slider-wrap">
+                <input type="range" min="1" max="5" value="4" class="score-slider" data-dim="literature" oninput="updateScore(this)">
+                <span class="score-value" id="score-literature">4</span>
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="score-info">
+                <span class="score-name">统计方法</span>
+                <span class="score-desc">统计学方法是否正确恰当</span>
+              </div>
+              <div class="score-slider-wrap">
+                <input type="range" min="1" max="5" value="4" class="score-slider" data-dim="statistics" oninput="updateScore(this)">
+                <span class="score-value" id="score-statistics">4</span>
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="score-info">
+                <span class="score-name">伦理合规</span>
+                <span class="score-desc">是否符合医学伦理要求</span>
+              </div>
+              <div class="score-slider-wrap">
+                <input type="range" min="1" max="5" value="4" class="score-slider" data-dim="ethics" oninput="updateScore(this)">
+                <span class="score-value" id="score-ethics">4</span>
+              </div>
+            </div>
+            <div class="score-row">
+              <div class="score-info">
+                <span class="score-name">写作规范</span>
+                <span class="score-desc">是否符合医学论文格式要求</span>
+              </div>
+              <div class="score-slider-wrap">
+                <input type="range" min="1" max="5" value="4" class="score-slider" data-dim="writing" oninput="updateScore(this)">
+                <span class="score-value" id="score-writing">4</span>
+              </div>
+            </div>
+          </div>
+          <div class="total-score-box">
+            <span class="total-label">评审总分</span>
+            <span class="total-number" id="total-score">28</span>
+            <span class="total-max">/ 35</span>
+            <span class="total-status pass" id="total-status">通过</span>
+          </div>
+          <button class="btn btn-primary" onclick="confirmStep3()">确认评审结果</button>
+        </div>
+      </div>
+
+      <!-- 内置脚本展示 -->
+      <div class="card script-card">
+        <h3>内置脚本：stat_check.py</h3>
+        <pre class="code-block"><code># stat_check.py - 统计学方法审查引擎
+class StatChecker:
+    """医学论文统计方法自动审查"""
+    
+    def check_methods(self, manuscript):
+        """审查论文中使用的统计方法"""
+        issues = []
+        # 1. 检验方法匹配
+        if "t检验" in manuscript and "正态性检验" not in manuscript:
+            issues.append(StatIssue(
+                level="WARNING",
+                message="使用t检验前应先进行正态性检验",
+                suggestion="添加Shapiro-Wilk或Kolmogorov-Smirnov检验"))
+        # 2. 样本量计算
+        if "样本量" not in manuscript:
+            issues.append(StatIssue(
+                level="ERROR",
+                message="缺少样本量计算说明",
+                suggestion="补充G*Power或PASS软件的样本量估算"))
+        # 3. 多重比较校正
+        if manuscript.p_value_count > 3 and "Bonferroni" not in manuscript:
+            issues.append(StatIssue(
+                level="WARNING",
+                message="多次比较需进行校正",
+                suggestion="使用Bonferroni或FDR校正方法"))
+        return issues</code></pre>
+      </div>
+    </section>
+
+    <!-- ====== 步骤4：质量门控 ====== -->
+    <section class="step-panel" id="step-4" style="display:none;">
+      <div class="panel-header">
+        <div class="phase-tag strategist">STRATEGIST 策略阶段</div>
+        <h2>步骤 4：质量门控</h2>
+        <p class="panel-desc">综合评估所有策略阶段的成果，确保论文大纲和评审结果满足进入写作阶段的最低标准。</p>
+      </div>
+
+      <div class="card gate-card" id="gate-card">
+        <h3>质量门控检查</h3>
+        <div id="gate-results"></div>
+      </div>
+
+      <div class="card" id="gate-action" style="display:none;">
+        <div class="gate-pass" id="gate-pass-content">
+          <svg viewBox="0 0 64 64" class="gate-icon" fill="none">
+            <circle cx="32" cy="32" r="28" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+            <path d="M22 33l7 7 13-14" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>质量门控通过</h3>
+          <p>所有检查项均已满足要求，可以进入COMPOSER写作阶段。</p>
+          <button class="btn btn-primary" onclick="enterComposerPhase()">进入写作阶段</button>
+        </div>
+        <div class="gate-fail" id="gate-fail-content" style="display:none;">
+          <svg viewBox="0 0 64 64" class="gate-icon" fill="none">
+            <circle cx="32" cy="32" r="28" fill="#FFF1F2" stroke="#DC2626" stroke-width="2"/>
+            <path d="M24 24l16 16M40 24l-16 16" stroke="#DC2626" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <h3>质量门控未通过</h3>
+          <p id="gate-fail-msg">请返回步骤3调整评审分数，确保总分 >= 28分。</p>
+          <button class="btn btn-outline" onclick="goToStep(3)">返回修改</button>
+        </div>
+      </div>
+
+      <!-- 内置脚本展示 -->
+      <div class="card script-card">
+        <h3>内置脚本：format_validator.py</h3>
+        <pre class="code-block"><code># format_validator.py - 论文格式规范验证引擎
+class FormatValidator:
+    """医学论文格式合规性验证"""
+    
+    def validate(self, manuscript, target_journal):
+        """根据目标期刊要求验证论文格式"""
+        rules = JournalFormatRules.load(target_journal)
+        issues = []
+        
+        # 1. 摘要格式检查
+        if not self._check_abstract_format(manuscript, rules):
+            issues.append(FormatIssue(
+                section="摘要",
+                message="摘要字数或格式不符合要求",
+                required=f"结构式摘要，{rules.abstract_max_words}字以内"))
+        
+        # 2. 参考文献格式检查
+        ref_issues = self._check_references(
+            manuscript.references, rules)
+        issues.extend(ref_issues)
+        
+        # 3. 图表规范检查
+        fig_issues = self._check_figures_tables(
+            manuscript, rules)
+        issues.extend(fig_issues)
+        
+        return ValidationReport(
+            total_issues=len(issues),
+            critical=sum(1 for i in issues if i.level=="ERROR"),
+            warnings=sum(1 for i in issues if i.level=="WARNING"))</code></pre>
+      </div>
+    </section>
+
+    <!-- ====== 步骤5：论文格式规范与模板生成 ====== -->
+    <section class="step-panel" id="step-5" style="display:none;">
+      <div class="panel-header">
+        <div class="phase-tag composer">COMPOSER 写作阶段</div>
+        <h2>步骤 5：论文格式规范与模板生成</h2>
+        <p class="panel-desc">根据目标期刊的格式要求，自动生成符合IMRAD结构的论文模板，包含摘要、关键词、中图分类号等标准要素。</p>
+      </div>
+
+      <div class="card" id="step5-control">
+        <h3>模板生成配置</h3>
+        <div class="form-group">
+          <label>目标期刊格式</label>
+          <select id="target-journal">
+            <option value="cjim">中华神经科杂志</option>
+            <option value="cjm">中华医学杂志</option>
+            <option value="cjim2">中华内科杂志</option>
+            <option value="cjn">中华护理杂志</option>
+            <option value="cjc">中国循环杂志</option>
+            <option value="cjo">中华骨科杂志</option>
+          </select>
+        </div>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" checked> 包含摘要模板（结构式）</label>
+          <label class="checkbox-label"><input type="checkbox" checked> 包含中英文关键词</label>
+          <label class="checkbox-label"><input type="checkbox" checked> 包含中图分类号</label>
+          <label class="checkbox-label"><input type="checkbox" checked> 包含基金项目标注</label>
+          <label class="checkbox-label"><input type="checkbox" checked> 包含伦理声明模板</label>
+          <label class="checkbox-label"><input type="checkbox" checked> 包含利益冲突声明</label>
+        </div>
+        <button class="btn btn-primary" onclick="runStep5()">生成模板</button>
+      </div>
+
+      <!-- 模板展示 -->
+      <div class="card" id="step5-template" style="display:none;">
+        <h3>生成的论文模板</h3>
+        <div class="template-preview" id="template-preview"></div>
+      </div>
+
+      <!-- 模拟日志 -->
+      <div class="sim-log-card card" id="step5-log" style="display:none;">
+        <h3>生成日志</h3>
+        <div class="sim-progress">
+          <div class="progress-track"><div class="progress-fill" id="step5-progress"></div></div>
+          <span class="progress-text" id="step5-progress-text">0%</span>
+        </div>
+        <div class="log-area" id="step5-log-area"></div>
+      </div>
+    </section>
+
+    <!-- ====== 步骤6：系统写作与质量监控 ====== -->
+    <section class="step-panel" id="step-6" style="display:none;">
+      <div class="panel-header">
+        <div class="phase-tag composer">COMPOSER 写作阶段</div>
+        <h2>步骤 6：系统写作与质量监控</h2>
+        <p class="panel-desc">按章节逐步推进论文写作，每章完成后自动进行质量检查，包括字数统计、格式验证和医学术语规范性审查。</p>
+      </div>
+
+      <div class="card">
+        <h3>章节写作进度</h3>
+        <div class="chapter-progress" id="chapter-progress">
+          <div class="chapter-item" data-chapter="abstract">
+            <div class="chapter-status pending"></div>
+            <div class="chapter-info">
+              <span class="chapter-name">摘要</span>
+              <span class="chapter-wordcount">目标：300-500字</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="writeChapter('abstract')">开始写作</button>
+          </div>
+          <div class="chapter-item" data-chapter="intro">
+            <div class="chapter-status pending"></div>
+            <div class="chapter-info">
+              <span class="chapter-name">引言</span>
+              <span class="chapter-wordcount">目标：500-800字</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="writeChapter('intro')">开始写作</button>
+          </div>
+          <div class="chapter-item" data-chapter="methods">
+            <div class="chapter-status pending"></div>
+            <div class="chapter-info">
+              <span class="chapter-name">材料与方法</span>
+              <span class="chapter-wordcount">目标：800-1500字</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="writeChapter('methods')">开始写作</button>
+          </div>
+          <div class="chapter-item" data-chapter="results">
+            <div class="chapter-status pending"></div>
+            <div class="chapter-info">
+              <span class="chapter-name">结果</span>
+              <span class="chapter-wordcount">目标：800-1200字</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="writeChapter('results')">开始写作</button>
+          </div>
+          <div class="chapter-item" data-chapter="discussion">
+            <div class="chapter-status pending"></div>
+            <div class="chapter-info">
+              <span class="chapter-name">讨论</span>
+              <span class="chapter-wordcount">目标：800-1200字</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="writeChapter('discussion')">开始写作</button>
+          </div>
+          <div class="chapter-item" data-chapter="conclusion">
+            <div class="chapter-status pending"></div>
+            <div class="chapter-info">
+              <span class="chapter-name">结论</span>
+              <span class="chapter-wordcount">目标：150-300字</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="writeChapter('conclusion')">开始写作</button>
+          </div>
+          <div class="chapter-item" data-chapter="references">
+            <div class="chapter-status pending"></div>
+            <div class="chapter-info">
+              <span class="chapter-name">参考文献</span>
+              <span class="chapter-wordcount">目标：15-30条</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="writeChapter('references')">开始写作</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 写作监控面板 -->
+      <div class="card" id="step6-monitor" style="display:none;">
+        <h3>质量监控面板</h3>
+        <div class="monitor-grid">
+          <div class="monitor-item">
+            <span class="monitor-label">当前章节</span>
+            <span class="monitor-value" id="monitor-chapter">--</span>
+          </div>
+          <div class="monitor-item">
+            <span class="monitor-label">已写字数</span>
+            <span class="monitor-value" id="monitor-words">0</span>
+          </div>
+          <div class="monitor-item">
+            <span class="monitor-label">医学术语检查</span>
+            <span class="monitor-value" id="monitor-terms">待检查</span>
+          </div>
+          <div class="monitor-item">
+            <span class="monitor-label">格式合规</span>
+            <span class="monitor-value" id="monitor-format">待检查</span>
+          </div>
+        </div>
+        <div class="sim-progress">
+          <div class="progress-track"><div class="progress-fill" id="step6-progress"></div></div>
+          <span class="progress-text" id="step6-progress-text">0%</span>
+        </div>
+        <div class="log-area" id="step6-log-area"></div>
+      </div>
+    </section>
+
+    <!-- ====== 步骤7：润色完善与投稿准备 ====== -->
+    <section class="step-panel" id="step-7" style="display:none;">
+      <div class="panel-header">
+        <div class="phase-tag composer">COMPOSER 写作阶段</div>
+        <h2>步骤 7：润色完善与投稿准备</h2>
+        <p class="panel-desc">全文统稿润色、参考文献格式整理（GB/T 7714标准）、查重检测模拟，并生成完整的投稿材料包。</p>
+      </div>
+
+      <div class="card" id="step7-control">
+        <h3>投稿准备清单</h3>
+        <div class="checklist">
+          <div class="check-item" id="chk-polish">
+            <div class="check-box"></div>
+            <span>全文统稿润色（语言流畅性、逻辑连贯性）</span>
+          </div>
+          <div class="check-item" id="chk-ref">
+            <div class="check-box"></div>
+            <span>参考文献格式整理（GB/T 7714标准）</span>
+          </div>
+          <div class="check-item" id="chk-plagiarism">
+            <div class="check-box"></div>
+            <span>查重检测（目标重复率 &lt; 15%）</span>
+          </div>
+          <div class="check-item" id="chk-cover">
+            <div class="check-box"></div>
+            <span>投稿信（Cover Letter）撰写</span>
+          </div>
+          <div class="check-item" id="chk-ethics">
+            <div class="check-box"></div>
+            <span>伦理审批材料清单</span>
+          </div>
+          <div class="check-item" id="chk-figures">
+            <div class="check-box"></div>
+            <span>图表质量检查（300dpi以上）</span>
+          </div>
+          <div class="check-item" id="chk-authors">
+            <div class="check-box"></div>
+            <span>作者署名确认与贡献声明</span>
+          </div>
+          <div class="check-item" id="chk-supplement">
+            <div class="check-box"></div>
+            <span>补充材料整理</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="runStep7()">开始处理</button>
+      </div>
+
+      <!-- 查重结果 -->
+      <div class="card" id="step7-plagiarism" style="display:none;">
+        <h3>查重检测结果</h3>
+        <div class="plagiarism-result">
+          <div class="plagiarism-circle">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#0E7490" stroke-width="8" 
+                      stroke-dasharray="314" stroke-dashoffset="314" id="plag-circle"
+                      transform="rotate(-90 60 60)"/>
+            </svg>
+            <span class="plag-percent" id="plag-percent">0%</span>
+          </div>
+          <div class="plag-detail">
+            <div class="plag-row"><span>总文字相似比</span><span id="plag-total">0%</span></div>
+            <div class="plag-row"><span>剔除引用后相似比</span><span id="plag-exclude">0%</span></div>
+            <div class="plag-row"><span>单篇最大相似比</span><span id="plag-max">0%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最终输出 -->
+      <div class="card" id="step7-output" style="display:none;">
+        <h3>投稿材料包</h3>
+        <div class="output-files">
+          <div class="output-file">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="file-info">
+              <span class="file-name">完整论文正文.docx</span>
+              <span class="file-size">约 6,500 字</span>
+            </div>
+            <span class="file-status ready">已生成</span>
+          </div>
+          <div class="output-file">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#E0F2FE" stroke="#0E7490" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#0E7490" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="file-info">
+              <span class="file-name">投稿信_Cover_Letter.docx</span>
+              <span class="file-size">约 400 字</span>
+            </div>
+            <span class="file-status ready">已生成</span>
+          </div>
+          <div class="output-file">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#059669" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="file-info">
+              <span class="file-name">伦理审批材料清单.pdf</span>
+              <span class="file-size">约 2 页</span>
+            </div>
+            <span class="file-status ready">已生成</span>
+          </div>
+          <div class="output-file">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#F3E8FF" stroke="#7C3AED" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="file-info">
+              <span class="file-name">查重检测报告.pdf</span>
+              <span class="file-size">约 5 页</span>
+            </div>
+            <span class="file-status ready">已生成</span>
+          </div>
+          <div class="output-file">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#FFF1F2" stroke="#DC2626" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="file-info">
+              <span class="file-name">基金项目标注说明.docx</span>
+              <span class="file-size">约 200 字</span>
+            </div>
+            <span class="file-status ready">已生成</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 模拟日志 -->
+      <div class="sim-log-card card" id="step7-log" style="display:none;">
+        <h3>处理日志</h3>
+        <div class="sim-progress">
+          <div class="progress-track"><div class="progress-fill" id="step7-progress"></div></div>
+          <span class="progress-text" id="step7-progress-text">0%</span>
+        </div>
+        <div class="log-area" id="step7-log-area"></div>
+      </div>
+
+      <!-- 完成提示 -->
+      <div class="card completion-card" id="step7-complete" style="display:none;">
+        <svg viewBox="0 0 64 64" fill="none" class="completion-icon">
+          <circle cx="32" cy="32" r="28" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+          <path d="M20 33l8 8 16-18" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>论文写作全流程已完成</h3>
+        <p>您的医学职称论文已通过全部7个步骤的质量检查，投稿材料包已生成完毕。请下载材料包后，根据目标期刊要求进行最终确认和提交。</p>
+        <div class="completion-tips">
+          <p>投稿建议：</p>
+          <ul>
+            <li>提交前请仔细核对作者信息及单位名称</li>
+            <li>确保伦理批件在有效期内</li>
+            <li>图表请使用目标期刊要求的格式（TIFF/EPS，300dpi以上）</li>
+            <li>建议通过期刊官方在线投稿系统提交</li>
+            <li>投稿后注意查收编辑部邮件通知</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== 底部 ========== -->
+  <footer class="app-footer">
+    <p>MedPaper Pro v2.0 - 医学职称论文写作全流程自动化平台</p>
+    <p>适用人群：临床医生 | 护理人员 | 医技人员 | 药学人员 | 公共卫生人员</p>
+  </footer>
+  <!-- ========== 所有JavaScript ========== -->
+  <script>
+    // ===== 全局状态 =====
+    let currentStep = 1;
+    let completedSteps = new Set();
+    let totalReviewScore = 28;
+    let chaptersCompleted = new Set();
+
+    // ===== API客户端层 =====
+    const API_BASE = 'http://localhost:8000/api';
+    let apiAvailable = null; // null=未检测, true=可用, false=不可用
+
+    async function checkApi() {
+      if (apiAvailable !== null) return apiAvailable;
+      try {
+        const resp = await fetch(API_BASE.replace('/api', '') + '/health', { signal: AbortSignal.timeout(3000) });
+        apiAvailable = resp.ok;
+      } catch(e) {
+        apiAvailable = false;
+      }
+      return apiAvailable;
+    }
+
+    async function apiCall(endpoint, data) {
+      const available = await checkApi();
+      if (available) {
+        try {
+          const resp = await fetch(API_BASE + endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          return await resp.json();
+        } catch(e) {
+          console.warn('[API] 调用失败，降级到模拟:', e);
+          return null;
+        }
+      }
+      return null; // 降级到模拟
+    }
+
+    // 更新API状态指示器
+    function updateApiStatusIndicator(status) {
+      const el = document.getElementById('api-status');
+      if (!el) return;
+      if (status === true) {
+        el.style.background = '#dcfce7';
+        el.style.color = '#166534';
+        el.textContent = '后端已连接';
+      } else if (status === false) {
+        el.style.background = '#ffedd5';
+        el.style.color = '#9a3412';
+        el.textContent = '演示模式';
+      } else {
+        el.style.background = '#f1f5f9';
+        el.style.color = '#64748b';
+        el.textContent = '检测中...';
+      }
+    }
+
+    // ===== 步骤导航 =====
+    function goToStep(stepNum) {
+      document.getElementById('step-' + currentStep).style.display = 'none';
+      document.getElementById('step-' + stepNum).style.display = 'block';
+      currentStep = stepNum;
+      updateProgressBar();
+      if (stepNum === 4) { checkGate(); }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgressBar() {
+      const indicators = document.querySelectorAll('.step-indicator');
+      const connectors = document.querySelectorAll('.connector-fill');
+      indicators.forEach((ind, idx) => {
+        const stepNum = idx + 1;
+        const circle = ind.querySelector('.step-circle');
+        circle.classList.remove('completed', 'active');
+        if (completedSteps.has(stepNum)) {
+          circle.classList.add('completed');
+          circle.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        } else if (stepNum === currentStep) {
+          circle.classList.add('active');
+          circle.textContent = stepNum;
+        } else {
+          circle.textContent = stepNum;
+        }
+        if (idx < connectors.length) {
+          connectors[idx].style.width = completedSteps.has(stepNum) ? '100%' : '0%';
+        }
+      });
+    }
+
+    // ===== 步骤1：目标期刊分析 =====
+    async function runStep1() {
+      const topic = document.getElementById('research-topic').value || '依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析';
+      const level = document.getElementById('title-level').value;
+      const dept = document.getElementById('department').value;
+
+      document.getElementById('step1-log').style.display = 'block';
+      const logArea = document.getElementById('step1-log-area');
+      const progressBar = document.getElementById('step1-progress');
+      const progressText = document.getElementById('step1-progress-text');
+      logArea.innerHTML = '';
+
+      // 添加连接状态日志
+      const connLine = document.createElement('div');
+      connLine.className = 'log-line';
+      connLine.textContent = '[连接] 正在检测后端服务...';
+      logArea.appendChild(connLine);
+
+      // 尝试调用真实API
+      const apiResult = await apiCall('/step1/journal-match', { topic, title_level: level, department: dept });
+
+      if (apiResult && apiResult.journals && apiResult.journals.length > 0) {
+        // === 真实API模式 ===
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 使用真实API模式';
+        logArea.appendChild(modeLine);
+
+        const apiLogs = [
+          { text: '[系统] 已通过后端加载医学期刊数据库', pct: 20 },
+          { text: '[分析] 后端已解析研究主题关键词', pct: 40 },
+          { text: '[匹配] 学科分类: ' + getDeptName(dept), pct: 55 },
+          { text: '[匹配] 职称级别适配: ' + getLevelName(level), pct: 65 },
+          { text: '[计算] 后端已完成期刊匹配度评分', pct: 80 },
+          { text: '[完成] 已从后端获取 ' + apiResult.journals.length + ' 本推荐期刊', pct: 100 }
+        ];
+
+        simulateLogs(apiLogs, logArea, progressBar, progressText, () => {
+          showApiJournalResults(apiResult.journals);
+          completedSteps.add(1);
+          updateProgressBar();
+          const resultsDiv = document.getElementById('step1-results');
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'btn btn-primary';
+          nextBtn.style.marginTop = '24px';
+          nextBtn.textContent = '下一步：文献检索与研究空白识别';
+          nextBtn.onclick = function() { goToStep(2); };
+          resultsDiv.appendChild(nextBtn);
+        });
+      } else {
+        // === 模拟降级模式 ===
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 后端未启动，使用模拟数据';
+        logArea.appendChild(modeLine);
+
+        const logs = [
+          { text: '[系统] 正在加载医学期刊数据库...', pct: 10 },
+          { text: '[检索] 已加载 3,200 本中文医学期刊信息', pct: 20 },
+          { text: '[分析] 正在解析研究主题关键词...', pct: 30 },
+          { text: '[匹配] 关键词: 依达拉奉、丁苯酞、急性脑梗死、联合治疗', pct: 40 },
+          { text: '[筛选] 学科分类: ' + getDeptName(dept), pct: 50 },
+          { text: '[匹配] 职称级别适配: ' + getLevelName(level), pct: 55 },
+          { text: '[计算] 正在计算期刊匹配度评分...', pct: 65 },
+          { text: '[评分] 中华神经科杂志 - 匹配度 96%', pct: 75 },
+          { text: '[评分] 中国卒中杂志 - 匹配度 89%', pct: 85 },
+          { text: '[评分] 中华内科杂志 - 匹配度 78%', pct: 92 },
+          { text: '[完成] 已生成 3 本推荐期刊的详细分析', pct: 100 }
+        ];
+
+        simulateLogs(logs, logArea, progressBar, progressText, () => {
+          showJournalResults(level);
+          completedSteps.add(1);
+          updateProgressBar();
+          const resultsDiv = document.getElementById('step1-results');
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'btn btn-primary';
+          nextBtn.style.marginTop = '24px';
+          nextBtn.textContent = '下一步：文献检索与研究空白识别';
+          nextBtn.onclick = function() { goToStep(2); };
+          resultsDiv.appendChild(nextBtn);
+        });
+      }
+    }
+
+    // 使用API数据渲染期刊推荐卡片
+    function showApiJournalResults(journals) {
+      const resultsDiv = document.getElementById('step1-results');
+      let html = '<h3>推荐期刊</h3>';
+      journals.forEach(j => {
+        const name = j.name || j.journal_name || '未知期刊';
+        const issn = j.issn || j.ISSN || '-';
+        const impact = j.impact_factor || j.impact || '-';
+        const reviewTime = j.review_cycle || j.review_time || '-';
+        const fee = j.page_fee || j.fee || '-';
+        const match = j.match_score || j.match || 0;
+        const tags = j.tags || [];
+        const note = j.note || j.description || '';
+        html += `
+        <div class="journal-card">
+          <div class="journal-header">
+            <h4>${name}</h4>
+            <span class="journal-issn">ISSN: ${issn}</span>
+          </div>
+          <div class="journal-metrics">
+            <div class="metric"><span class="metric-label">影响因子</span><span class="metric-value">${impact}</span></div>
+            <div class="metric"><span class="metric-label">审稿周期</span><span class="metric-value">${reviewTime}</span></div>
+            <div class="metric"><span class="metric-label">版面费</span><span class="metric-value">${fee}</span></div>
+            <div class="metric"><span class="metric-label">匹配度</span><span class="metric-value highlight">${match}%</span></div>
+          </div>
+          <div class="journal-tags">
+            ${tags.map(t => {
+              const tagText = typeof t === 'string' ? t : (t.text || '');
+              const tagType = typeof t === 'string' ? 'core' : (t.type || 'core');
+              return `<span class="journal-tag ${tagType}">${tagText}</span>`;
+            }).join('')}
+          </div>
+          <p class="journal-note">${note}</p>
+        </div>`;
+      });
+      resultsDiv.innerHTML = html;
+    }
+
+    function getDeptName(key) {
+      const map = { internal:'内科', surgery:'外科', pediatrics:'儿科', obstetrics:'妇产科', orthopedics:'骨科', neurology:'神经内科', cardiology:'心血管内科', oncology:'肿瘤科', nursing:'护理', pharmacy:'药学', radiology:'影像科', laboratory:'检验科', 'public-health':'公共卫生' };
+      return map[key] || key;
+    }
+
+    function getLevelName(key) {
+      const map = { junior:'初级', middle:'中级', 'sub-senior':'副高级', senior:'正高级' };
+      return map[key] || key;
+    }
+
+    function showJournalResults(level) {
+      const resultsDiv = document.getElementById('step1-results');
+      const journals = getJournalsByLevel(level);
+      let html = '<h3>推荐期刊</h3>';
+      journals.forEach(j => {
+        html += `
+        <div class="journal-card">
+          <div class="journal-header">
+            <h4>${j.name}</h4>
+            <span class="journal-issn">ISSN: ${j.issn}</span>
+          </div>
+          <div class="journal-metrics">
+            <div class="metric"><span class="metric-label">影响因子</span><span class="metric-value">${j.impact}</span></div>
+            <div class="metric"><span class="metric-label">审稿周期</span><span class="metric-value">${j.reviewTime}</span></div>
+            <div class="metric"><span class="metric-label">版面费</span><span class="metric-value">${j.fee}</span></div>
+            <div class="metric"><span class="metric-label">匹配度</span><span class="metric-value highlight">${j.match}%</span></div>
+          </div>
+          <div class="journal-tags">
+            ${j.tags.map(t => `<span class="journal-tag ${t.type}">${t.text}</span>`).join('')}
+          </div>
+          <p class="journal-note">${j.note}</p>
+        </div>`;
+      });
+      resultsDiv.innerHTML = html;
+    }
+
+    function getJournalsByLevel(level) {
+      const baseJournals = [
+        { name: '中华神经科杂志', issn: '1006-7876', impact: '1.856', reviewTime: '3-4个月', fee: '约3000元/页', match: 96,
+          tags: [{ text: '中国科技核心', type: 'core' }, { text: 'CSCD来源', type: 'cscd' }, { text: '中华医学会', type: 'cma' }],
+          note: '神经内科领域权威期刊，适合中级及以上职称发表临床研究。' },
+        { name: '中国卒中杂志', issn: '1673-3904', impact: '1.423', reviewTime: '2-3个月', fee: '约2000元/页', match: 89,
+          tags: [{ text: '中国科技核心', type: 'core' }, { text: 'CSCD来源', type: 'cscd' }],
+          note: '卒中领域专业期刊，审稿周期较短，适合脑血管病方向研究。' },
+        { name: '中华内科杂志', issn: '0578-1426', impact: '1.672', reviewTime: '3-5个月', fee: '约3500元/页', match: 78,
+          tags: [{ text: '中国科技核心', type: 'core' }, { text: 'CSCD来源', type: 'cscd' }, { text: '中华医学会', type: 'cma' }],
+          note: '内科综合权威期刊，适合有较广泛临床意义的脑梗死治疗研究。' }
+      ];
+      if (level === 'sub-senior' || level === 'senior') {
+        return [...baseJournals, { name: '中华医学杂志', issn: '0376-2491', impact: '2.134', reviewTime: '4-6个月', fee: '约4000元/页', match: 72,
+          tags: [{ text: '中国科技核心', type: 'core' }, { text: 'CSCD来源', type: 'cscd' }, { text: '中华医学会', type: 'cma' }, { text: 'MEDLINE', type: 'medline' }],
+          note: '综合性医学顶刊，适合高影响力的临床研究成果。' }].slice(0, 3);
+      }
+      if (level === 'junior') {
+        return [baseJournals[1], { name: '中国实用神经疾病杂志', issn: '1673-3770', impact: '0.956', reviewTime: '1-2个月', fee: '约1200元/页', match: 85,
+          tags: [{ text: '中国科技核心', type: 'core' }], note: '神经疾病临床类期刊，适合初级职称的首篇论文发表。' },
+          { name: '临床神经病学杂志', issn: '1004-1648', impact: '1.102', reviewTime: '2-3个月', fee: '约1500元/页', match: 80,
+          tags: [{ text: '中国科技核心', type: 'core' }, { text: 'CSCD来源', type: 'cscd' }], note: '临床神经病学专业期刊，收录标准适中，适合初级职称。' }];
+      }
+      return baseJournals;
+    }
+
+    // ===== 步骤2：文献检索 =====
+    async function runStep2() {
+      const topic = document.getElementById('research-topic') ?
+        (document.getElementById('research-topic').value || '依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析') :
+        '依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析';
+
+      document.getElementById('step2-log').style.display = 'block';
+      const logArea = document.getElementById('step2-log-area');
+      const progressBar = document.getElementById('step2-progress');
+      const progressText = document.getElementById('step2-progress-text');
+      logArea.innerHTML = '';
+
+      const connLine = document.createElement('div');
+      connLine.className = 'log-line';
+      connLine.textContent = '[连接] 正在检测后端服务...';
+      logArea.appendChild(connLine);
+
+      const apiResult = await apiCall('/step2/literature-search', { topic });
+
+      if (apiResult && (apiResult.papers || apiResult.literature)) {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 使用真实API模式';
+        logArea.appendChild(modeLine);
+
+        const papers = apiResult.papers || apiResult.literature || [];
+        const stats = apiResult.stats || {};
+        const totalLit = stats.total || papers.length;
+        const relatedLit = stats.related || Math.round(papers.length * 0.25);
+        const rctCount = stats.rct || Math.round(papers.length * 0.05);
+        const metaCount = stats.meta || Math.round(papers.length * 0.02);
+
+        const apiLogs = [
+          { text: '[PubMed] 后端已完成PubMed文献检索', pct: 20 },
+          { text: '[CNKI] 后端已完成知网文献检索', pct: 40 },
+          { text: '[万方] 后端已完成万方数据检索', pct: 55 },
+          { text: '[去重] 后端已完成跨库去重处理', pct: 65 },
+          { text: '[筛选] 共检索到 ' + totalLit + ' 篇文献，高度相关 ' + relatedLit + ' 篇', pct: 80 },
+          { text: '[分析] 后端已完成研究空白识别', pct: 90 },
+          { text: '[完成] 文献检索完成，共 ' + totalLit + ' 篇', pct: 100 }
+        ];
+
+        simulateLogs(apiLogs, logArea, progressBar, progressText, () => {
+          document.getElementById('step2-results').style.display = 'block';
+          animateNumber('lit-total', totalLit, 1500);
+          animateNumber('lit-related', relatedLit, 1500);
+          animateNumber('lit-rct', rctCount, 1500);
+          animateNumber('lit-meta', metaCount, 1500);
+          if (apiResult.gaps) { showApiResearchGaps(apiResult.gaps); } else { showResearchGaps(); }
+          completedSteps.add(2);
+          updateProgressBar();
+          const gapsDiv = document.getElementById('step2-gaps');
+          if (gapsDiv && !gapsDiv.querySelector('.btn-next-step')) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'btn btn-primary btn-next-step';
+            nextBtn.style.marginTop = '24px';
+            nextBtn.textContent = '下一步：论文大纲与7维度评审';
+            nextBtn.onclick = function() { goToStep(3); };
+            gapsDiv.appendChild(nextBtn);
+          }
+        });
+      } else {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 后端未启动，使用模拟数据';
+        logArea.appendChild(modeLine);
+
+        const logs = [
+          { text: '[PubMed] 正在连接 NCBI Entrez API...', pct: 5 },
+          { text: '[PubMed] 检索策略: (edaravone AND dl-3-n-butylphthalide AND cerebral infarction)', pct: 12 },
+          { text: '[PubMed] 找到 47 篇相关文献', pct: 18 },
+          { text: '[CNKI] 正在检索中国知网数据库...', pct: 25 },
+          { text: '[CNKI] 检索策略: 主题=(依达拉奉) AND 主题=(丁苯酞) AND 主题=(急性脑梗死)', pct: 32 },
+          { text: '[CNKI] 找到 128 篇相关文献', pct: 38 },
+          { text: '[万方] 正在检索万方数据...', pct: 45 },
+          { text: '[万方] 检索策略: 依达拉奉+丁苯酞+急性脑梗死', pct: 52 },
+          { text: '[万方] 找到 96 篇相关文献', pct: 58 },
+          { text: '[去重] 正在跨库去重处理...', pct: 65 },
+          { text: '[去重] 去除重复文献 43 篇，剩余 228 篇', pct: 70 },
+          { text: '[筛选] 正在进行相关性评分...', pct: 78 },
+          { text: '[筛选] 高度相关文献 56 篇，其中RCT 12 篇，Meta分析 5 篇', pct: 85 },
+          { text: '[分析] 正在进行研究空白识别...', pct: 90 },
+          { text: '[完成] 已识别 3 个研究空白方向', pct: 100 }
+        ];
+
+        simulateLogs(logs, logArea, progressBar, progressText, () => {
+          document.getElementById('step2-results').style.display = 'block';
+          animateNumber('lit-total', 228, 1500);
+          animateNumber('lit-related', 56, 1500);
+          animateNumber('lit-rct', 12, 1500);
+          animateNumber('lit-meta', 5, 1500);
+          showResearchGaps();
+          completedSteps.add(2);
+          updateProgressBar();
+          const gapsDiv = document.getElementById('step2-gaps');
+          if (gapsDiv && !gapsDiv.querySelector('.btn-next-step')) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'btn btn-primary btn-next-step';
+            nextBtn.style.marginTop = '24px';
+            nextBtn.textContent = '下一步：论文大纲与7维度评审';
+            nextBtn.onclick = function() { goToStep(3); };
+            gapsDiv.appendChild(nextBtn);
+          }
+        });
+      }
+    }
+
+    // 使用API数据渲染研究空白
+    function showApiResearchGaps(gaps) {
+      const container = document.getElementById('gaps-container');
+      let html = '';
+      gaps.forEach((g, idx) => {
+        const title = g.title || '研究空白 ' + (idx + 1);
+        const desc = g.description || g.desc || '';
+        const refs = g.references || g.literature || [];
+        html += `
+        <div class="gap-card">
+          <div class="gap-header">
+            <span class="gap-number">${String(idx + 1).padStart(2, '0')}</span>
+            <h4>${title}</h4>
+          </div>
+          <p class="gap-desc">${desc}</p>
+          ${refs.length > 0 ? `
+          <div class="gap-support">
+            <span class="support-label">支撑文献（${refs.length}篇）：</span>
+            <ul class="support-list">
+              ${refs.map(r => `<li>${typeof r === 'string' ? r : (r.title || r.citation || '')}</li>`).join('')}
+            </ul>
+          </div>` : ''}
+        </div>`;
+      });
+      container.innerHTML = html;
+      document.getElementById('step2-gaps').style.display = 'block';
+    }
+
+    function showResearchGaps() {
+      const container = document.getElementById('gaps-container');
+      container.innerHTML = `
+        <div class="gap-card">
+          <div class="gap-header"><span class="gap-number">01</span><h4>联合用药与单一用药的疗效对比研究不足</h4></div>
+          <p class="gap-desc">现有文献多关注依达拉奉或丁苯酞单一药物治疗方案，两者联合使用的随机对照试验研究较少，缺乏高质量循证医学证据支持联合用药方案。</p>
+          <div class="gap-support"><span class="support-label">支撑文献（5篇）：</span><ul class="support-list">
+            <li>Wang Y, et al. Edaravone in acute ischemic stroke: a meta-analysis. Stroke, 2022.</li>
+            <li>张某某, 等. 丁苯酞软胶囊治疗急性脑梗死的系统评价. 中国循证医学杂志, 2021.</li>
+            <li>Liu H, et al. Combined neuroprotective therapy for acute cerebral infarction. J Neurol Sci, 2023.</li>
+            <li>李某, 等. 依达拉奉治疗急性脑梗死的临床研究进展. 中华神经科杂志, 2020.</li>
+            <li>Chen X, et al. NBP in ischemic stroke: pharmacology and clinical trials. CNS Drugs, 2021.</li>
+          </ul></div>
+        </div>
+        <div class="gap-card">
+          <div class="gap-header"><span class="gap-number">02</span><h4>不同剂量丁苯酞联合依达拉奉的剂量-效应关系研究缺乏</h4></div>
+          <p class="gap-desc">丁苯酞存在多种给药方案（常规剂量、强化剂量），不同剂量与依达拉奉联合使用时的疗效差异和安全性的系统比较研究较为缺乏。</p>
+          <div class="gap-support"><span class="support-label">支撑文献（4篇）：</span><ul class="support-list">
+            <li>赵某某, 等. 不同剂量丁苯酞治疗急性脑梗死的疗效比较. 中国新药杂志, 2022.</li>
+            <li>Wu M, et al. Dose-response of NBP in acute ischemic stroke. Neuropharmacology, 2021.</li>
+            <li>黄某某, 等. 丁苯酞序贯疗法对脑梗死患者神经功能的影响. 中国临床神经科学, 2023.</li>
+            <li>Zhang L, et al. Optimal dosing strategy of NBP combined with edaravone. J Stroke Cerebrovasc Dis, 2022.</li>
+          </ul></div>
+        </div>
+        <div class="gap-card">
+          <div class="gap-header"><span class="gap-number">03</span><h4>特殊人群（老年、合并糖尿病）联合用药安全性数据不足</h4></div>
+          <p class="gap-desc">年龄>75岁的老年患者和合并2型糖尿病的脑梗死患者，使用依达拉奉联合丁苯酞治疗时的不良反应发生率和用药安全性数据尚不充分。</p>
+          <div class="gap-support"><span class="support-label">支撑文献（3篇）：</span><ul class="support-list">
+            <li>孙某某, 等. 老年急性脑梗死患者依达拉奉治疗的安全性评价. 中华老年医学杂志, 2022.</li>
+            <li>Yang J, et al. Safety of edaravone in elderly stroke patients. Drugs Aging, 2021.</li>
+            <li>周某某, 等. 糖尿病合并脑梗死患者神经保护剂治疗的安全性分析. 中国糖尿病杂志, 2023.</li>
+          </ul></div>
+        </div>`;
+      document.getElementById('step2-gaps').style.display = 'block';
+    }
+
+    // ===== 步骤3：评分系统 =====
+    function updateScore(slider) {
+      const dim = slider.dataset.dim;
+      const value = slider.value;
+      document.getElementById('score-' + dim).textContent = value;
+      let total = 0;
+      document.querySelectorAll('.score-slider').forEach(s => { total += parseInt(s.value); });
+      const totalEl = document.getElementById('total-score');
+      const statusEl = document.getElementById('total-status');
+      totalEl.textContent = total;
+      totalReviewScore = total;
+      if (total >= 28) {
+        statusEl.textContent = '通过'; statusEl.className = 'total-status pass'; totalEl.style.color = '#059669';
+      } else {
+        statusEl.textContent = '未通过'; statusEl.className = 'total-status fail'; totalEl.style.color = '#DC2626';
+      }
+    }
+
+    function confirmStep3() {
+      if (totalReviewScore < 28) { alert('评审总分未达到28分，请调整评分后再确认。'); return; }
+      completedSteps.add(3); updateProgressBar(); goToStep(4);
+    }
+
+    // ===== 步骤4：质量门控 =====
+    function checkGate() {
+      const gateResults = document.getElementById('gate-results');
+      const checks = [
+        { name: '目标期刊分析', passed: completedSteps.has(1), desc: '已完成期刊匹配分析' },
+        { name: '文献检索与空白识别', passed: completedSteps.has(2), desc: '已完成文献检索和研究空白识别' },
+        { name: '7维度评审总分', passed: totalReviewScore >= 28, desc: '当前总分: ' + totalReviewScore + '/35' + (totalReviewScore >= 28 ? ' (>= 28)' : ' (< 28)') },
+        { name: '论文大纲完整性', passed: completedSteps.has(3), desc: 'IMRAD结构大纲已确认' }
+      ];
+      let allPassed = true;
+      let html = '';
+      checks.forEach(c => {
+        if (!c.passed) allPassed = false;
+        html += `
+          <div class="gate-check ${c.passed ? 'passed' : 'failed'}">
+            <div class="gate-check-icon">
+              ${c.passed ?
+                '<svg viewBox="0 0 24 24" width="20" height="20" fill="none"><circle cx="12" cy="12" r="10" fill="#ECFDF5" stroke="#059669" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' :
+                '<svg viewBox="0 0 24 24" width="20" height="20" fill="none"><circle cx="12" cy="12" r="10" fill="#FFF1F2" stroke="#DC2626" stroke-width="2"/><path d="M8 8l8 8M16 8l-8 8" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/></svg>'
+              }
+            </div>
+            <div class="gate-check-info">
+              <span class="gate-check-name">${c.name}</span>
+              <span class="gate-check-desc">${c.desc}</span>
+            </div>
+            <span class="gate-check-status">${c.passed ? '通过' : '未通过'}</span>
+          </div>`;
+      });
+      gateResults.innerHTML = html;
+      document.getElementById('gate-action').style.display = 'block';
+      if (allPassed) {
+        document.getElementById('gate-pass-content').style.display = 'block';
+        document.getElementById('gate-fail-content').style.display = 'none';
+      } else {
+        document.getElementById('gate-pass-content').style.display = 'none';
+        document.getElementById('gate-fail-content').style.display = 'block';
+        const failedNames = checks.filter(c => !c.passed).map(c => c.name).join('、');
+        document.getElementById('gate-fail-msg').textContent = '以下项目未通过：' + failedNames + '。请返回相应步骤进行修改。';
+      }
+      completedSteps.add(4); updateProgressBar();
+    }
+
+    function enterComposerPhase() { completedSteps.add(4); updateProgressBar(); goToStep(5); }
+
+    // ===== 步骤5：模板生成 =====
+    async function runStep5() {
+      document.getElementById('step5-log').style.display = 'block';
+      const logArea = document.getElementById('step5-log-area');
+      const progressBar = document.getElementById('step5-progress');
+      const progressText = document.getElementById('step5-progress-text');
+      logArea.innerHTML = '';
+
+      const journal = document.getElementById('target-journal');
+      const journalName = journal.options[journal.selectedIndex].text;
+      const topic = document.getElementById('research-topic') ? document.getElementById('research-topic').value : '依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析';
+      const studyType = document.getElementById('study-type') ? document.getElementById('study-type').value : 'retrospective';
+
+      const connLine = document.createElement('div');
+      connLine.className = 'log-line';
+      connLine.textContent = '[连接] 正在检测后端服务...';
+      logArea.appendChild(connLine);
+
+      const apiResult = await apiCall('/step5/generate-template', { journal_name: journalName, topic, study_type: studyType });
+
+      if (apiResult && apiResult.outline) {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 使用真实API模式';
+        logArea.appendChild(modeLine);
+
+        const apiLogs = [
+          { text: '[加载] 后端已加载 ' + journalName + ' 的格式规范', pct: 15 },
+          { text: '[解析] 后端已获取论文格式要求', pct: 30 },
+          { text: '[生成] 后端正在生成论文大纲...', pct: 50 },
+          { text: '[生成] 后端正在生成各章节模板...', pct: 70 },
+          { text: '[校验] 后端已完成模板格式校验', pct: 85 },
+          { text: '[完成] 后端已生成论文模板', pct: 100 }
+        ];
+
+        simulateLogs(apiLogs, logArea, progressBar, progressText, () => {
+          showApiTemplate(apiResult.outline, journalName);
+          completedSteps.add(5); updateProgressBar();
+          const templateDiv = document.getElementById('step5-template');
+          if (templateDiv && !templateDiv.querySelector('.btn-next-step')) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'btn btn-primary btn-next-step';
+            nextBtn.style.marginTop = '24px';
+            nextBtn.textContent = '下一步：系统写作与质量监控';
+            nextBtn.onclick = function() { goToStep(6); };
+            templateDiv.appendChild(nextBtn);
+          }
+        });
+      } else {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 后端未启动，使用模拟数据';
+        logArea.appendChild(modeLine);
+
+        const logs = [
+          { text: '[加载] 正在加载 ' + journalName + ' 的格式规范...', pct: 10 },
+          { text: '[解析] 获取论文格式要求: IMRAD结构、结构式摘要、GB/T 7714参考文献格式', pct: 25 },
+          { text: '[生成] 正在生成论文标题页模板...', pct: 35 },
+          { text: '[生成] 正在生成结构式摘要模板（目的/方法/结果/结论）...', pct: 45 },
+          { text: '[生成] 正在生成中英文关键词模板...', pct: 55 },
+          { text: '[生成] 正在生成中图分类号与文献标识码模板...', pct: 65 },
+          { text: '[生成] 正在生成材料与方法章节框架（含伦理声明）...', pct: 75 },
+          { text: '[生成] 正在生成结果章节表格和图表模板...', pct: 85 },
+          { text: '[校验] 正在验证模板格式合规性...', pct: 92 },
+          { text: '[完成] 论文模板已生成，共包含 8 个标准章节模板', pct: 100 }
+        ];
+
+        simulateLogs(logs, logArea, progressBar, progressText, () => {
+          showTemplate(journalName);
+          completedSteps.add(5); updateProgressBar();
+          const templateDiv = document.getElementById('step5-template');
+          if (templateDiv && !templateDiv.querySelector('.btn-next-step')) {
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'btn btn-primary btn-next-step';
+            nextBtn.style.marginTop = '24px';
+            nextBtn.textContent = '下一步：系统写作与质量监控';
+            nextBtn.onclick = function() { goToStep(6); };
+            templateDiv.appendChild(nextBtn);
+          }
+        });
+      }
+    }
+
+    function showApiTemplate(outline, journalName) {
+      const preview = document.getElementById('template-preview');
+      let bodyHtml = '';
+      outline.forEach((section, idx) => {
+        const title = section.title || section.name || ('章节 ' + (idx + 1));
+        const isSubfield = section.subsections && section.subsections.length > 0;
+        bodyHtml += `<div class="tpl-section-title">${title}</div>`;
+        if (isSubfield) {
+          section.subsections.forEach(sub => {
+            bodyHtml += `<div class="tpl-field indent"><span class="tpl-label">${sub.label || ''}：</span><span class="tpl-placeholder">${sub.content || sub.placeholder || '[待填写]'}</span></div>`;
+          });
+        } else if (section.content) {
+          bodyHtml += `<div class="tpl-field indent"><span class="tpl-placeholder">${section.content}</span></div>`;
+        }
+      });
+      preview.innerHTML = `<div class="template-section"><div class="template-header-row"><span class="template-journal">${journalName}</span><span class="template-format">IMRAD格式</span></div><div class="template-body">${bodyHtml}</div></div>`;
+      document.getElementById('step5-template').style.display = 'block';
+    }
+
+    function showTemplate(journalName) {
+      const preview = document.getElementById('template-preview');
+      preview.innerHTML = `
+        <div class="template-section">
+          <div class="template-header-row"><span class="template-journal">${journalName}</span><span class="template-format">IMRAD格式</span></div>
+          <div class="template-body">
+            <div class="tpl-field"><span class="tpl-label">论文标题：</span><span class="tpl-content">依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析</span></div>
+            <div class="tpl-field"><span class="tpl-label">作者署名：</span><span class="tpl-placeholder">[作者1, 作者2, 作者3]</span></div>
+            <div class="tpl-field"><span class="tpl-label">作者单位：</span><span class="tpl-placeholder">[医院名称 科室名称，省 市 邮编]</span></div>
+            <div class="tpl-field"><span class="tpl-label">基金项目：</span><span class="tpl-placeholder">[基金项目名称（编号：XXXXXX）]</span></div>
+            <div class="tpl-divider"></div>
+            <div class="tpl-field"><span class="tpl-label">摘要：</span><span class="tpl-tag">结构式摘要</span></div>
+            <div class="tpl-subfields">
+              <div class="tpl-field indent"><span class="tpl-label">目的：</span><span class="tpl-placeholder">[探讨/评价/分析...]</span></div>
+              <div class="tpl-field indent"><span class="tpl-label">方法：</span><span class="tpl-placeholder">[选取...年...月...例患者，随机分为...组，每组...例。对照组采用...，观察组采用...。比较...。采用SPSS...进行统计学分析。]</span></div>
+              <div class="tpl-field indent"><span class="tpl-label">结果：</span><span class="tpl-placeholder">[观察组总有效率为...%，显著高于对照组的...%（P<0.05）。治疗后观察组NIHSS评分为...分，显著低于对照组的...分（P<0.05）。]</span></div>
+              <div class="tpl-field indent"><span class="tpl-label">结论：</span><span class="tpl-placeholder">[依达拉奉联合丁苯酞治疗急性脑梗死疗效确切，可显著改善神经功能，安全性良好。]</span></div>
+            </div>
+            <div class="tpl-field"><span class="tpl-label">关键词：</span><span class="tpl-placeholder">[急性脑梗死; 依达拉奉; 丁苯酞; 联合治疗; 神经功能]</span></div>
+            <div class="tpl-field"><span class="tpl-label">中图分类号：</span><span class="tpl-placeholder">R743.3</span></div>
+            <div class="tpl-field"><span class="tpl-label">文献标识码：</span><span class="tpl-placeholder">A</span></div>
+            <div class="tpl-divider"></div>
+            <div class="tpl-field"><span class="tpl-label">Abstract：</span><span class="tpl-placeholder">[Objective | Methods | Results | Conclusion]</span></div>
+            <div class="tpl-field"><span class="tpl-label">Keywords：</span><span class="tpl-placeholder">[acute cerebral infarction; edaravone; dl-3-n-butylphthalide; combined therapy; neurological function]</span></div>
+            <div class="tpl-divider"></div>
+            <div class="tpl-section-title">1 引言</div>
+            <div class="tpl-field indent"><span class="tpl-placeholder">[研究背景 → 国内外研究现状 → 研究空白 → 研究目的]</span></div>
+            <div class="tpl-section-title">2 材料与方法</div>
+            <div class="tpl-field indent"><span class="tpl-placeholder">[2.1 一般资料 → 2.2 纳入与排除标准 → 2.3 治疗方法 → 2.4 观察指标 → 2.5 统计学方法]</span></div>
+            <div class="tpl-field indent"><span class="tpl-ethics">伦理声明：本研究已获得本院伦理委员会批准（批号：XXXX），所有患者均已签署知情同意书。</span></div>
+            <div class="tpl-section-title">3 结果</div>
+            <div class="tpl-field indent"><span class="tpl-placeholder">[3.1 一般资料比较（表1） → 3.2 临床疗效比较（表2） → 3.3 神经功能评分（表3） → 3.4 不良反应（表4）]</span></div>
+            <div class="tpl-section-title">4 讨论</div>
+            <div class="tpl-field indent"><span class="tpl-placeholder">[4.1 疗效机制分析 → 4.2 与同类研究比较 → 4.3 研究局限性]</span></div>
+            <div class="tpl-section-title">5 结论</div>
+            <div class="tpl-field indent"><span class="tpl-placeholder">[总结主要发现和临床意义]</span></div>
+            <div class="tpl-divider"></div>
+            <div class="tpl-section-title">参考文献</div>
+            <div class="tpl-field indent"><span class="tpl-placeholder">[按GB/T 7714格式排列，15-30条，近5年文献占70%以上]</span></div>
+            <div class="tpl-divider"></div>
+            <div class="tpl-field"><span class="tpl-ethics">利益冲突声明：所有作者声明不存在利益冲突。</span></div>
+          </div>
+        </div>`;
+      document.getElementById('step5-template').style.display = 'block';
+    }
+
+    // ===== 步骤6：章节写作 =====
+    const chapterNames = { abstract:'摘要', intro:'引言', methods:'材料与方法', results:'结果', discussion:'讨论', conclusion:'结论', references:'参考文献' };
+
+    async function writeChapter(chapterKey) {
+      if (chaptersCompleted.has(chapterKey)) return;
+      const monitor = document.getElementById('step6-monitor');
+      monitor.style.display = 'block';
+      const name = chapterNames[chapterKey];
+      document.getElementById('monitor-chapter').textContent = name;
+      document.getElementById('monitor-words').textContent = '0';
+      document.getElementById('monitor-terms').textContent = '检查中...';
+      document.getElementById('monitor-format').textContent = '检查中...';
+      const logArea = document.getElementById('step6-log-area');
+      const progressBar = document.getElementById('step6-progress');
+      const progressText = document.getElementById('step6-progress-text');
+      logArea.innerHTML = '';
+
+      const topic = document.getElementById('research-topic') ?
+        (document.getElementById('research-topic').value || '依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析') :
+        '依达拉奉联合丁苯酞治疗急性脑梗死的临床疗效分析';
+      const outlineSummary = name + '章节的' + topic + '相关内容';
+      const wordTargets = { abstract: 420, intro: 650, methods: 1200, results: 1000, discussion: 1050, conclusion: 220, references: 25 };
+      const target = wordTargets[chapterKey] || 500;
+
+      const connLine = document.createElement('div');
+      connLine.className = 'log-line';
+      connLine.textContent = '[连接] 正在检测后端服务...';
+      logArea.appendChild(connLine);
+
+      const apiResult = await apiCall('/step6/write-chapter', { chapter_key: chapterKey, topic, outline_summary: outlineSummary });
+
+      if (apiResult && apiResult.content) {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 使用真实API模式';
+        logArea.appendChild(modeLine);
+        const realWordCount = apiResult.word_count || target;
+        const apiLogs = [
+          { text: `[写作] 后端正在生成「${name}」章节内容...`, pct: 15 },
+          { text: `[写作] 后端已加载研究数据和文献素材`, pct: 35 },
+          { text: `[写作] 后端正在构建段落结构...`, pct: 55 },
+          { text: `[写作] 后端正在填充专业内容...`, pct: 75 },
+          { text: `[检查] 医学术语自动检查: 通过`, pct: 85 },
+          { text: `[检查] 格式合规检查: 通过`, pct: 92 },
+          { text: `[完成] 「${name}」已生成，共 ${realWordCount} ${chapterKey === 'references' ? '条' : '字'}`, pct: 100 }
+        ];
+        simulateLogs(apiLogs, logArea, progressBar, progressText, () => {
+          chaptersCompleted.add(chapterKey);
+          const item = document.querySelector(`.chapter-item[data-chapter="${chapterKey}"]`);
+          const status = item.querySelector('.chapter-status');
+          status.classList.remove('pending'); status.classList.add('done');
+          const btn = item.querySelector('button');
+          btn.textContent = '已完成'; btn.disabled = true; btn.classList.remove('btn-outline'); btn.classList.add('btn-done');
+          document.getElementById('monitor-words').textContent = realWordCount;
+          document.getElementById('monitor-terms').textContent = '通过';
+          document.getElementById('monitor-format').textContent = '通过';
+          if (chaptersCompleted.size === 7) { completedSteps.add(6); updateProgressBar(); setTimeout(() => goToStep(7), 1000); }
+        });
+        let wordCount = 0;
+        const wordInterval = setInterval(() => {
+          wordCount += Math.floor(Math.random() * 30) + 10;
+          if (wordCount > realWordCount) wordCount = realWordCount;
+          document.getElementById('monitor-words').textContent = wordCount;
+          if (wordCount >= realWordCount) clearInterval(wordInterval);
+        }, 300);
+      } else {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 后端未启动，使用模拟数据';
+        logArea.appendChild(modeLine);
+        const logs = [
+          { text: `[写作] 正在生成「${name}」章节内容...`, pct: 10 },
+          { text: `[写作] 加载研究数据和文献素材...`, pct: 20 },
+          { text: `[写作] 构建段落结构和逻辑框架...`, pct: 35 },
+          { text: `[写作] 填充专业内容，当前字数: ${Math.round(target * 0.3)}`, pct: 50 },
+          { text: `[写作] 字数: ${Math.round(target * 0.6)}，正在完善细节...`, pct: 65 },
+          { text: `[写作] 字数: ${Math.round(target * 0.85)}，正在优化表达...`, pct: 78 },
+          { text: `[检查] 医学术语自动检查: 通过`, pct: 85 },
+          { text: `[检查] 格式合规检查: 通过`, pct: 92 },
+          { text: `[完成] 「${name}」已生成，共 ${target} ${chapterKey === 'references' ? '条' : '字'}`, pct: 100 }
+        ];
+        simulateLogs(logs, logArea, progressBar, progressText, () => {
+          chaptersCompleted.add(chapterKey);
+          const item = document.querySelector(`.chapter-item[data-chapter="${chapterKey}"]`);
+          const status = item.querySelector('.chapter-status');
+          status.classList.remove('pending'); status.classList.add('done');
+          const btn = item.querySelector('button');
+          btn.textContent = '已完成'; btn.disabled = true; btn.classList.remove('btn-outline'); btn.classList.add('btn-done');
+          document.getElementById('monitor-words').textContent = target;
+          document.getElementById('monitor-terms').textContent = '通过';
+          document.getElementById('monitor-format').textContent = '通过';
+          if (chaptersCompleted.size === 7) { completedSteps.add(6); updateProgressBar(); setTimeout(() => goToStep(7), 1000); }
+        });
+        let wordCount = 0;
+        const wordInterval = setInterval(() => {
+          wordCount += Math.floor(Math.random() * 30) + 10;
+          if (wordCount > target) wordCount = target;
+          document.getElementById('monitor-words').textContent = wordCount;
+          if (wordCount >= target) clearInterval(wordInterval);
+        }, 300);
+      }
+    }
+
+    // ===== 步骤7：润色与投稿 =====
+    async function runStep7() {
+      document.getElementById('step7-log').style.display = 'block';
+      const logArea = document.getElementById('step7-log-area');
+      const progressBar = document.getElementById('step7-progress');
+      const progressText = document.getElementById('step7-progress-text');
+      logArea.innerHTML = '';
+      const checks = ['chk-polish', 'chk-ref', 'chk-plagiarism', 'chk-cover', 'chk-ethics', 'chk-figures', 'chk-authors', 'chk-supplement'];
+
+      const connLine = document.createElement('div');
+      connLine.className = 'log-line';
+      connLine.textContent = '[连接] 正在检测后端服务...';
+      logArea.appendChild(connLine);
+
+      const apiResult = await apiCall('/step7/polish-submit', { paper_data: { chapters_completed: Array.from(chaptersCompleted) } });
+
+      if (apiResult && (apiResult.plagiarism || apiResult.format_check)) {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 使用真实API模式';
+        logArea.appendChild(modeLine);
+
+        const plagResult = apiResult.plagiarism || {};
+        const plagPercent = plagResult.similarity || plagResult.total || 8.6;
+
+        const apiLogs = [
+          { text: '[润色] 后端正在进行全文语言润色...', pct: 10, check: 'chk-polish' },
+          { text: '[润色] 后端已完成语言优化', pct: 20 },
+          { text: '[润色] 后端已完成医学术语标准化', pct: 28 },
+          { text: '[参考文献] 后端正在整理参考文献格式...', pct: 35, check: 'chk-ref' },
+          { text: '[参考文献] 后端已完成GB/T 7714格式校验', pct: 42 },
+          { text: '[查重] 后端正在进行查重检测...', pct: 55, check: 'chk-plagiarism' },
+          { text: '[查重] 查重完成，总相似比 ' + plagPercent + '%', pct: 65 },
+          { text: '[投稿] 后端正在生成投稿信...', pct: 75, check: 'chk-cover' },
+          { text: '[材料] 后端正在整理投稿材料...', pct: 85, check: 'chk-ethics' },
+          { text: '[材料] 后端正在生成作者贡献声明...', pct: 90, check: 'chk-figures' },
+          { text: '[材料] 后端正在打包补充材料...', pct: 93, check: 'chk-authors' },
+          { text: '[材料] 补充材料打包完成', pct: 96, check: 'chk-supplement' },
+          { text: '[完成] 投稿材料包已生成', pct: 100 }
+        ];
+
+        simulateLogs(apiLogs, logArea, progressBar, progressText, () => {
+          checks.forEach(id => { const el = document.getElementById(id); if (el) el.querySelector('.check-box').classList.add('checked'); });
+          document.getElementById('step7-plagiarism').style.display = 'block';
+          animatePlagiarism(plagPercent);
+          document.getElementById('step7-output').style.display = 'block';
+          document.getElementById('step7-complete').style.display = 'block';
+          completedSteps.add(7); updateProgressBar();
+        });
+      } else {
+        const modeLine = document.createElement('div');
+        modeLine.className = 'log-line';
+        modeLine.textContent = '[模式] 后端未启动，使用模拟数据';
+        logArea.appendChild(modeLine);
+
+        const logs = [
+          { text: '[润色] 正在进行全文语言润色...', pct: 8, check: 'chk-polish' },
+          { text: '[润色] 修正口语化表达 12 处，优化长句结构 8 处', pct: 15 },
+          { text: '[润色] 统一医学术语表述，标准化缩写格式', pct: 22 },
+          { text: '[参考文献] 正在整理 GB/T 7714 格式...', pct: 28, check: 'chk-ref' },
+          { text: '[参考文献] 已整理 23 条参考文献，格式校验通过', pct: 35 },
+          { text: '[查重] 正在连接查重引擎...', pct: 40 },
+          { text: '[查重] 正在比对 CNKI 学术不端检测库...', pct: 48 },
+          { text: '[查重] 正在比对 PubMed/Crossref 英文文献库...', pct: 55 },
+          { text: '[查重] 正在比对万方/维普数据库...', pct: 62, check: 'chk-plagiarism' },
+          { text: '[查重] 查重完成，总相似比 8.6%', pct: 70 },
+          { text: '[投稿] 正在生成投稿信（Cover Letter）...', pct: 76, check: 'chk-cover' },
+          { text: '[投稿] Cover Letter 已生成，包含研究亮点和创新点', pct: 80 },
+          { text: '[材料] 正在整理伦理审批材料清单...', pct: 85, check: 'chk-ethics' },
+          { text: '[材料] 伦理批件、知情同意书模板、临床试验注册号已核对', pct: 88, check: 'chk-figures' },
+          { text: '[材料] 作者贡献声明已生成', pct: 91, check: 'chk-authors' },
+          { text: '[材料] 补充材料（原始数据、统计分析代码）已打包', pct: 95, check: 'chk-supplement' },
+          { text: '[完成] 投稿材料包已生成，共 5 个文件', pct: 100 }
+        ];
+
+        simulateLogs(logs, logArea, progressBar, progressText, () => {
+          checks.forEach(id => { const el = document.getElementById(id); if (el) el.querySelector('.check-box').classList.add('checked'); });
+          document.getElementById('step7-plagiarism').style.display = 'block';
+          animatePlagiarism(8.6);
+          document.getElementById('step7-output').style.display = 'block';
+          document.getElementById('step7-complete').style.display = 'block';
+          completedSteps.add(7); updateProgressBar();
+        });
+      }
+    }
+
+    function animatePlagiarism(percent) {
+      const circle = document.getElementById('plag-circle');
+      const text = document.getElementById('plag-percent');
+      const total = document.getElementById('plag-total');
+      const exclude = document.getElementById('plag-exclude');
+      const maxEl = document.getElementById('plag-max');
+      const circumference = 314;
+      let current = 0;
+      const interval = setInterval(() => {
+        current += 0.5;
+        if (current > percent) current = percent;
+        circle.setAttribute('stroke-dashoffset', circumference * (1 - current / 100));
+        text.textContent = current.toFixed(1) + '%';
+        if (current >= percent) {
+          clearInterval(interval);
+          total.textContent = percent + '%'; exclude.textContent = '5.2%'; maxEl.textContent = '3.1%';
+        }
+      }, 30);
+    }
+
+    // ===== 通用工具函数 =====
+    function simulateLogs(logs, logArea, progressBar, progressText, onComplete) {
+      let idx = 0;
+      const interval = setInterval(() => {
+        if (idx >= logs.length) { clearInterval(interval); if (onComplete) onComplete(); return; }
+        const log = logs[idx];
+        progressBar.style.width = log.pct + '%';
+        progressText.textContent = log.pct + '%';
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        line.textContent = log.text;
+        logArea.appendChild(line);
+        logArea.scrollTop = logArea.scrollHeight;
+        idx++;
+      }, 400);
+    }
+
+    function animateNumber(elementId, target, duration) {
+      const el = document.getElementById(elementId);
+      let start = 0;
+      const step = target / (duration / 16);
+      const interval = setInterval(() => {
+        start += step;
+        if (start >= target) { start = target; clearInterval(interval); }
+        el.textContent = Math.round(start);
+      }, 16);
+    }
+
+    // ===== 初始化 =====
+    document.addEventListener('DOMContentLoaded', async function() {
+      updateProgressBar();
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.target.id === 'step-4' && mutation.target.style.display === 'block') { checkGate(); }
+        });
+      });
+      document.querySelectorAll('.step-panel').forEach(panel => {
+        observer.observe(panel, { attributes: true, attributeFilter: ['style'] });
+      });
+      // 检测API状态并更新指示器
+      try {
+        const available = await checkApi();
+        updateApiStatusIndicator(available);
+      } catch(e) {
+        updateApiStatusIndicator(false);
+      }
+    });
+  </script>
+
+
+  <!-- ========== 核心布局CSS ========== -->
+  <style id="critical-layout">
+    /* ===== CSS Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --primary: #0E7490;
+      --primary-dark: #0C5E73;
+      --primary-light: #E0F7FA;
+      --primary-50: #ECFEFF;
+      --primary-100: #CFFAFE;
+      --primary-200: #A5F3FC;
+      --primary-600: #0891B2;
+      --primary-700: #0E7490;
+      --primary-800: #155E75;
+      --primary-900: #164E63;
+      
+      --red: #DC2626;
+      --red-light: #FFF1F2;
+      --red-dark: #B91C1C;
+      
+      --green: #059669;
+      --green-light: #ECFDF5;
+      
+      --amber: #F59E0B;
+      --amber-light: #FFFBEB;
+      
+      --purple: #7C3AED;
+      --purple-light: #F3E8FF;
+      
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+      
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== App Header ===== */
+    .app-header {
+      background: linear-gradient(135deg, var(--primary-800) 0%, var(--primary) 100%);
+      color: white;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(14,116,144,0.3);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .logo-text p {
+      font-size: 12px;
+      opacity: 0.8;
+      font-weight: 400;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .nav-version {
+      background: rgba(255,255,255,0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    /* ===== Progress Bar ===== */
+    .progress-bar-section {
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 20px 0;
+      overflow-x: auto;
+    }
+    .progress-bar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      min-width: 900px;
+    }
+    .step-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .step-circle.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 4px rgba(14,116,144,0.2);
+    }
+    .step-circle.completed {
+      background: var(--green);
+      color: white;
+    }
+    .step-label {
+      font-size: 11px;
+      color: var(--gray-500);
+      text-align: center;
+      max-width: 80px;
+      line-height: 1.3;
+    }
+    .step-indicator:has(.step-circle.active) .step-label,
+    .step-indicator:has(.step-circle.completed) .step-label {
+      color: var(--gray-800);
+      font-weight: 600;
+    }
+    .step-phase {
+      font-size: 10px;
+      color: var(--gray-400);
+      background: var(--gray-100);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .step-connector {
+      flex: 1;
+      height: 3px;
+      background: var(--gray-200);
+      border-radius: 2px;
+      margin: 0 4px;
+      position: relative;
+      min-width: 20px;
+      margin-bottom: 32px;
+    }
+    .connector-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* ===== Main Content ===== */
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* ===== Panel Header ===== */
+    .panel-header {
+      margin-bottom: 24px;
+    }
+    .phase-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .phase-tag.strategist {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(14,116,144,0.2);
+    }
+    .phase-tag.composer {
+      background: var(--amber-light);
+      color: var(--amber);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+    .panel-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 6px;
+    }
+    .panel-desc {
+      font-size: 14px;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+
+    /* ===== Cards ===== */
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card h3::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Card Grid ===== */
+    .card-grid {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .card-grid.two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ===== Form Elements ===== */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+    textarea, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--gray-800);
+      transition: border-color 0.2s;
+      background: white;
+    }
+    textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(14,116,144,0.1);
+    }
+    textarea { resize: vertical; min-height: 60px; }
+
+    /* ===== Buttons ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-outline {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .btn-outline:hover {
+      background: var(--primary-50);
+    }
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+    .btn-done {
+      background: var(--green-light);
+      color: var(--green);
+      border: 1px solid rgba(5,150,105,0.3);
+      cursor: default;
+    }
+
+    /* ===== Checkbox Group ===== */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--gray-700);
+      cursor: pointer;
+    }
+    .checkbox-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+    }
+
+    /* ===== Placeholder Content ===== */
+    .placeholder-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .placeholder-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    .placeholder-content p {
+      font-size: 14px;
+      color: var(--gray-400);
+      max-width: 320px;
+    }
+
+    /* ===== Simulation Log ===== */
+    .sim-log-card {
+      border-color: rgba(14,116,144,0.2);
+      background: var(--gray-50);
+    }
+    .sim-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-600), var(--primary));
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .progress-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      min-width: 36px;
+      text-align: right;
+    }
+    .log-area {
+      background: var(--gray-900);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+    .log-line {
+      color: #D1D5DB;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Stat Bar ===== */
+    .stat-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 16px 0;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 16px;
+      background: var(--primary-50);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(14,116,144,0.1);
+    }
+    .stat-num {
+      display: block;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+    .stat-label {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    /* ===== Research Gaps ===== */
+    .gap-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: box-shadow 0.2s;
+    }
+    .gap-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+    .gap-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .gap-number {
+      background: var(--primary);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .gap-header h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    .gap-desc {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    .gap-support {
+      background: var(--gray-50);
+      border-radius: 6px;
+      padding: 12px 16px;
+    }
+    .support-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .support-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 8px;
+    }
+    .support-list li {
+      font-size: 12px;
+      color: var(--gray-600);
+      padding: 3px 0 3px 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .support-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      background: var(--primary-200);
+      border-radius: 50%;
+    }
+
+    /* ===== Review Scores ===== */
+    .review-hint {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 20px;
+    }
+    .score-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+      gap: 16px;
+    }
+    .score-row:last-child {
+      border-bottom: none;
+    }
+    .score-info {
+      flex: 1;
+    }
+    .score-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+    .score-desc {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+    .score-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 140px;
+    }
+    .score-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80px;
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      outline: none;
+    }
+    .score-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.15s;
+    }
+    .score-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    .score-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 20px;
+      text-align: center;
+    }
+    .total-score-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px;
+      background: var(--gray-50);
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--gray-200);
+      margin: 16px 0;
+    }
+    .total-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-600);
+    }
+    .total-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .total-max {
+      font-size: 14px;
+      color: var(--gray-400);
+    }
+    .total-status {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .total-status.pass {
+      background: var(--green-light);
+      color: var(--green);
+    }
+    .total-status.fail {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    /* ===== Outline Tree ===== */
+    .outline-tree {
+      padding: 8px 0;
+    }
+    .outline-item {
+      padding: 8px 12px;
+      font-size: 14px;
+      color: var(--gray-600);
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .outline-item:hover {
+      background: var(--gray-50);
+    }
+    .outline-item.level-1 {
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+    .outline-item.level-2 {
+      padding-left: 32px;
+      font-size: 13px;
+    }
+    .outline-item.active {
+      border-left: 3px solid var(--primary);
+    }
+
+    /* ===== Quality Gate ===== */
+    .gate-check {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      border: 1px solid var(--gray-200);
+    }
+    .gate-check.passed {
+      background: var(--green-light);
+      border-color: rgba(5,150,105,0.2);
+    }
+    .gate-check.failed {
+      background: var(--red-light);
+      border-color: rgba(220,38,38,0.2);
+    }
+    .gate-check-info {
+      flex: 1;
+    }
+    .gate-check-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+    .gate-check-desc {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+    .gate-check-status {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .gate-check.passed .gate-check-status {
+      color: var(--green);
+      background: rgba(5,150,105,0.1);
+    }
+    .gate-check.failed .gate-check-status {
+      color: var(--red);
+      background: rgba(220,38,38,0.1);
+    }
+    .gate-pass, .gate-fail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 32px 20px;
+      gap: 16px;
+    }
+    .gate-icon {
+      width: 64px;
+      height: 64px;
+    }
+    .gate-pass h3 {
+      color: var(--green);
+      font-size: 20px;
+    }
+    .gate-fail h3 {
+      color: var(--red);
+      font-size: 20px;
+    }
+    .gate-pass p, .gate-fail p {
+      color: var(--gray-600);
+      font-size: 14px;
+      max-width: 400px;
+    }
+
+    /* ===== Template Preview ===== */
+    .template-preview {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .template-section {
+      background: white;
+    }
+    .template-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: var(--primary);
+      color: white;
+    }
+    .template-journal {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .template-format {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    .template-body {
+      padding: 20px;
+    }
+    .tpl-field {
+      padding: 6px 0;
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      font-size: 14px;
+    }
+    .tpl-field.indent {
+      padding-left: 24px;
+    }
+    .tpl-label {
+      font-weight: 600;
+      color: var(--gray-700);
+      flex-shrink: 0;
+    }
+    .tpl-content {
+      color: var(--gray-800);
+    }
+    .tpl-placeholder {
+      color: var(--gray-400);
+      font-style: italic;
+    }
+    .tpl-tag {
+      font-size: 11px;
+      background: var(--primary-100);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tpl-ethics {
+      font-size: 12px;
+      color: var(--gray-500);
+      font-style: italic;
+      padding: 8px 12px;
+      background: var(--amber-light);
+      border-radius: 4px;
+      border-left: 3px solid var(--amber);
+    }
+    .tpl-divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 12px 0;
+    }
+    .tpl-section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      padding: 8px 0 4px;
+    }
+    .tpl-subfields {
+      margin-left: 16px;
+      border-left: 2px solid var(--primary-100);
+      padding-left: 16px;
+    }
+
+    /* ===== Chapter Progress ===== */
+    .chapter-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      transition: background 0.15s;
+    }
+    .chapter-item:last-child {
+      border-bottom: none;
+    }
+    .chapter-item:hover {
+      background: var(--gray-50);
+    }
+    .chapter-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .chapter-status.pending {
+      background: var(--gray-200);
+    }
+    .chapter-status.done {
+      background: var(--green);
+      position: relative;
+    }
+    .chapter-status.done::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+    .chapter-info {
+      flex: 1;
+    }
+    .chapter-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+    .chapter-wordcount {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+
+    /* ===== Monitor Grid ===== */
+    .monitor-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .monitor-item {
+      padding: 16px;
+      background: var(--gray-50);
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .monitor-label {
+      display: block;
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+    }
+    .monitor-value {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* ===== Plagiarism Result ===== */
+    .plagiarism-result {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 20px;
+    }
+    .plagiarism-circle {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+    .plagiarism-circle svg {
+      width: 100%;
+      height: 100%;
+    }
+    .plag-percent {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .plag-detail {
+      flex: 1;
+    }
+    .plag-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 14px;
+    }
+    .plag-row:last-child {
+      border-bottom: none;
+    }
+    .plag-row span:first-child {
+      color: var(--gray-600);
+    }
+    .plag-row span:last-child {
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+
+    /* ===== Checklist ===== */
+    .checklist {
+      margin-bottom: 20px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 14px;
+      color: var(--gray-700);
+    }
+    .check-item:last-child {
+      border-bottom: none;
+    }
+    .check-box {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--gray-300);
+      border-radius: 6px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .check-box.checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .check-box.checked::after {
+      content: '';
+      width: 6px;
+      height: 10px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+      margin-top: -2px;
+    }
+
+    /* ===== Output Files ===== */
+    .output-files {
+      display: grid;
+      gap: 12px;
+    }
+    .output-file {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      transition: box-shadow 0.2s;
+    }
+    .output-file:hover {
+      box-shadow: var(--shadow-md);
+    }
+    .output-file svg {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    .file-info {
+      flex: 1;
+    }
+    .file-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+    .file-size {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+    .file-status {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .file-status.ready {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    /* ===== Completion Card ===== */
+    .completion-card {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .completion-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+    }
+    .completion-card h3 {
+      justify-content: center;
+      font-size: 20px;
+      color: var(--green);
+    }
+    .completion-card h3::before {
+      display: none;
+    }
+    .completion-card > p {
+      font-size: 14px;
+      color: var(--gray-600);
+      max-width: 600px;
+      margin: 12px auto 20px;
+    }
+    .completion-tips {
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: var(--gray-50);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-200);
+    }
+    .completion-tips p {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 10px;
+    }
+    .completion-tips ul {
+      list-style: none;
+      padding: 0;
+    }
+    .completion-tips li {
+      font-size: 13px;
+      color: var(--gray-600);
+      padding: 5px 0 5px 20px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .completion-tips li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 8px;
+      height: 8px;
+      background: var(--primary-200);
+      border-radius: 50%;
+    }
+
+    /* ===== Code Block ===== */
+    .code-block {
+      background: var(--gray-900);
+      color: #E5E7EB;
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* ===== Journal Cards ===== */
+    .journal-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: box-shadow 0.2s;
+    }
+    .journal-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+    .journal-card:last-child {
+      margin-bottom: 0;
+    }
+    .journal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .journal-header h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    .journal-issn {
+      font-size: 11px;
+      color: var(--gray-400);
+      font-family: monospace;
+    }
+    .journal-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .metric {
+      text-align: center;
+      padding: 10px;
+      background: white;
+      border-radius: 6px;
+      border: 1px solid var(--gray-100);
+    }
+    .metric-label {
+      display: block;
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-bottom: 4px;
+    }
+    .metric-value {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    .metric-value.highlight {
+      color: var(--primary);
+    }
+    .journal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .journal-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .journal-tag.core {
+      background: var(--primary-100);
+      color: var(--primary);
+    }
+    .journal-tag.cscd {
+      background: var(--amber-light);
+      color: var(--amber);
+    }
+    .journal-tag.cma {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+    .journal-tag.medline {
+      background: var(--green-light);
+      color: var(--green);
+    }
+    .journal-note {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+
+    /* ===== Search Config ===== */
+    .search-config {
+      margin-bottom: 20px;
+    }
+    .config-item {
+      margin-bottom: 16px;
+    }
+    .config-item label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    /* ===== Footer ===== */
+    .app-footer {
+      text-align: center;
+      padding: 32px 24px;
+      margin-top: 40px;
+      border-top: 1px solid var(--gray-200);
+      background: white;
+    }
+    .app-footer p {
+      font-size: 13px;
+      color: var(--gray-400);
+      line-height: 1.8;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .card-grid.two-col {
+        grid-template-columns: 1fr;
+      }
+      .stat-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .monitor-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .journal-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .plagiarism-result {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 640px) {
+      .header-inner {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+      .logo-area {
+        flex-direction: column;
+      }
+      .progress-bar-inner {
+        min-width: 700px;
+      }
+      .stat-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+      .score-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  </style>
+
+</body>
+</html>

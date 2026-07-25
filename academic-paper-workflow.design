@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "id": "page-index",
+      "title": "学术论文写作全流程自动化平台",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1753443600000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/index.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "学术论文写作全流程自动化平台",
+    "designLibrary": null
+  }
+}

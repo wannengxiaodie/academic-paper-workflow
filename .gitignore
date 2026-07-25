@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Trae Design internal
+.preflight/
+validation-report.json
+runtime-orchestration-summary.json
+
+# Node (if any)
+node_modules/
+
+# Output
+*.docx
+!backend/data/
