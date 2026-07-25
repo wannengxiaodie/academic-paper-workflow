@@ -281,9 +281,9 @@ body {
     <div class="header-inner">
       <div class="logo-area">
         <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="8" fill="#0E7490"/>
-          <path d="M16 6L8 12v4c0 5.55 3.42 10.74 8 12 4.58-1.26 8-6.45 8-12v-4L16 6z" fill="white" opacity="0.9"/>
-          <path d="M13 16.5l2 2 4-4" stroke="#0E7490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect width="32" height="32" rx="8" fill="#0E7490"></rect>
+          <path d="M16 6L8 12v4c0 5.55 3.42 10.74 8 12 4.58-1.26 8-6.45 8-12v-4L16 6z" fill="white" opacity="0.9"></path>
+          <path d="M13 16.5l2 2 4-4" stroke="#0E7490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
         </svg>
         <div class="logo-text">
           <h1>医学职称论文写作全流程自动化平台</h1>
@@ -291,6 +291,10 @@ body {
         </div>
       </div>
       <nav class="header-nav">
+        <button class="header-config-btn" onclick="goToConfig()" title="返回配置页面">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="white" stroke-width="1.5"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          配置
+        </button>
         <span class="nav-badge">STRATEGIST + COMPOSER</span>
         <span class="nav-version">v2.0</span>
       </nav>
@@ -320,7 +324,7 @@ body {
       <div class="step-connector"><div class="connector-fill" id="connector-3"></div></div>
       <div class="step-indicator" data-step="4">
         <div class="step-circle">4</div>
-        <span class="step-label">质量门控</span>
+        <span class="step-label">质量控制</span>
         <span class="step-phase">策略</span>
       </div>
       <div class="step-connector"><div class="connector-fill" id="connector-4"></div></div>
@@ -398,8 +402,8 @@ body {
           <h3>推荐期刊</h3>
           <div class="placeholder-content">
             <svg viewBox="0 0 48 48" fill="none" class="placeholder-icon">
-              <circle cx="24" cy="24" r="20" stroke="#0E7490" stroke-width="2" stroke-dasharray="4 4"/>
-              <path d="M18 24h12M24 18v12" stroke="#0E7490" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="24" cy="24" r="20" stroke="#0E7490" stroke-width="2" stroke-dasharray="4 4"></circle>
+              <path d="M18 24h12M24 18v12" stroke="#0E7490" stroke-width="2" stroke-linecap="round"></path>
             </svg>
             <p>点击"开始分析"按钮，系统将根据您的研究方向智能匹配期刊</p>
           </div>
@@ -727,8 +731,8 @@ class StatChecker:
       <div class="card" id="gate-action" style="display:none;">
         <div class="gate-pass" id="gate-pass-content">
           <svg viewBox="0 0 64 64" class="gate-icon" fill="none">
-            <circle cx="32" cy="32" r="28" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
-            <path d="M22 33l7 7 13-14" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="32" cy="32" r="28" fill="#ECFDF5" stroke="#059669" stroke-width="2"></circle>
+            <path d="M22 33l7 7 13-14" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
           <h3>质量门控通过</h3>
           <p>所有检查项均已满足要求，可以进入COMPOSER写作阶段。</p>
@@ -736,8 +740,8 @@ class StatChecker:
         </div>
         <div class="gate-fail" id="gate-fail-content" style="display:none;">
           <svg viewBox="0 0 64 64" class="gate-icon" fill="none">
-            <circle cx="32" cy="32" r="28" fill="#FFF1F2" stroke="#DC2626" stroke-width="2"/>
-            <path d="M24 24l16 16M40 24l-16 16" stroke="#DC2626" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="32" cy="32" r="28" fill="#FFF1F2" stroke="#DC2626" stroke-width="2"></circle>
+            <path d="M24 24l16 16M40 24l-16 16" stroke="#DC2626" stroke-width="3" stroke-linecap="round"></path>
           </svg>
           <h3>质量门控未通过</h3>
           <p id="gate-fail-msg">请返回步骤3调整评审分数，确保总分 >= 28分。</p>
@@ -982,10 +986,10 @@ class FormatValidator:
         <div class="plagiarism-result">
           <div class="plagiarism-circle">
             <svg viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E7EB" stroke-width="8"></circle>
               <circle cx="60" cy="60" r="50" fill="none" stroke="#0E7490" stroke-width="8" 
                       stroke-dasharray="314" stroke-dashoffset="314" id="plag-circle"
-                      transform="rotate(-90 60 60)"/>
+                      transform="rotate(-90 60 60)"></circle>
             </svg>
             <span class="plag-percent" id="plag-percent">0%</span>
           </div>
@@ -1002,7 +1006,7 @@ class FormatValidator:
         <h3>投稿材料包</h3>
         <div class="output-files">
           <div class="output-file">
-            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"></rect><path d="M10 10h12M10 15h12M10 20h8" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"></path></svg>
             <div class="file-info">
               <span class="file-name">完整论文正文.docx</span>
               <span class="file-size">约 6,500 字</span>
@@ -1010,7 +1014,7 @@ class FormatValidator:
             <span class="file-status ready">已生成</span>
           </div>
           <div class="output-file">
-            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#E0F2FE" stroke="#0E7490" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#0E7490" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#E0F2FE" stroke="#0E7490" stroke-width="1.5"></rect><path d="M10 10h12M10 15h12M10 20h8" stroke="#0E7490" stroke-width="1.5" stroke-linecap="round"></path></svg>
             <div class="file-info">
               <span class="file-name">投稿信_Cover_Letter.docx</span>
               <span class="file-size">约 400 字</span>
@@ -1018,7 +1022,7 @@ class FormatValidator:
             <span class="file-status ready">已生成</span>
           </div>
           <div class="output-file">
-            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#059669" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"></rect><path d="M10 10h12M10 15h12M10 20h8" stroke="#059669" stroke-width="1.5" stroke-linecap="round"></path></svg>
             <div class="file-info">
               <span class="file-name">伦理审批材料清单.pdf</span>
               <span class="file-size">约 2 页</span>
@@ -1026,7 +1030,7 @@ class FormatValidator:
             <span class="file-status ready">已生成</span>
           </div>
           <div class="output-file">
-            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#F3E8FF" stroke="#7C3AED" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#F3E8FF" stroke="#7C3AED" stroke-width="1.5"></rect><path d="M10 10h12M10 15h12M10 20h8" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"></path></svg>
             <div class="file-info">
               <span class="file-name">查重检测报告.pdf</span>
               <span class="file-size">约 5 页</span>
@@ -1034,7 +1038,7 @@ class FormatValidator:
             <span class="file-status ready">已生成</span>
           </div>
           <div class="output-file">
-            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#FFF1F2" stroke="#DC2626" stroke-width="1.5"/><path d="M10 10h12M10 15h12M10 20h8" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="2" width="24" height="28" rx="3" fill="#FFF1F2" stroke="#DC2626" stroke-width="1.5"></rect><path d="M10 10h12M10 15h12M10 20h8" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"></path></svg>
             <div class="file-info">
               <span class="file-name">基金项目标注说明.docx</span>
               <span class="file-size">约 200 字</span>
@@ -1057,8 +1061,8 @@ class FormatValidator:
       <!-- 完成提示 -->
       <div class="card completion-card" id="step7-complete" style="display:none;">
         <svg viewBox="0 0 64 64" fill="none" class="completion-icon">
-          <circle cx="32" cy="32" r="28" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
-          <path d="M20 33l8 8 16-18" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="28" fill="#ECFDF5" stroke="#059669" stroke-width="2"></circle>
+          <path d="M20 33l8 8 16-18" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
         </svg>
         <h3>论文写作全流程已完成</h3>
         <p>您的医学职称论文已通过全部7个步骤的质量检查，投稿材料包已生成完毕。请下载材料包后，根据目标期刊要求进行最终确认和提交。</p>
@@ -1090,14 +1094,37 @@ class FormatValidator:
     let totalReviewScore = 28;
     let chaptersCompleted = new Set();
 
+    // ===== 配置管理（从登录页获取） =====
+    const STORAGE_KEY = 'medpaper_config';
+
+    function loadAppConfig() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+      } catch(e) { return null; }
+    }
+
+    // 初始化时检查配置：未配置则跳转登录页
+    (function initConfig() {
+      const cfg = loadAppConfig();
+      if (!cfg) {
+        window.location.replace('login.html');
+        return;
+      }
+      // 应用后端地址
+      if (cfg.backend && cfg.backend.url) {
+        API_BASE_VAR = cfg.backend.url.replace(/\/+$/, '') + '/api';
+      }
+    })();
+
     // ===== API客户端层 =====
-    const API_BASE = 'http://localhost:8000/api';
+    let API_BASE_VAR = 'http://localhost:8000/api';
     let apiAvailable = null; // null=未检测, true=可用, false=不可用
 
     async function checkApi() {
       if (apiAvailable !== null) return apiAvailable;
       try {
-        const resp = await fetch(API_BASE.replace('/api', '') + '/health', { signal: AbortSignal.timeout(3000) });
+        const resp = await fetch(API_BASE_VAR.replace('/api', '') + '/health', { signal: AbortSignal.timeout(3000) });
         apiAvailable = resp.ok;
       } catch(e) {
         apiAvailable = false;
@@ -1109,7 +1136,7 @@ class FormatValidator:
       const available = await checkApi();
       if (available) {
         try {
-          const resp = await fetch(API_BASE + endpoint, {
+          const resp = await fetch(API_BASE_VAR + endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -1140,6 +1167,11 @@ class FormatValidator:
         el.style.color = '#64748b';
         el.textContent = '检测中...';
       }
+    }
+
+    // ===== 返回配置页 =====
+    function goToConfig() {
+      window.location.href = 'login.html';
     }
 
     // ===== 步骤导航 =====
@@ -2119,6 +2151,24 @@ class FormatValidator:
       padding: 4px 10px;
       border-radius: 20px;
       font-size: 11px;
+    }
+    .header-config-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .header-config-btn:hover {
+      background: rgba(255,255,255,0.22);
     }
 
     /* ===== Progress Bar ===== */

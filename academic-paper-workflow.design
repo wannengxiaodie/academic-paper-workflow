@@ -1,14 +1,30 @@
 {
   "data": [
     {
+      "id": "page-login",
+      "title": "登录与配置",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1753530000000,
+      "canvasData": {
+        "x": -400,
+        "y": -144,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/login.html",
+        "interactions": []
+      }
+    },
+    {
       "id": "page-index",
       "title": "学术论文写作全流程自动化平台",
       "type": "page",
-      "version": 1,
+      "version": 2,
       "createdAt": 1753443600000,
       "canvasData": {
-        "x": 0,
-        "y": 0,
+        "x": -132,
+        "y": -144,
         "group": 0
       },
       "devMetadata": {
@@ -18,9 +34,11 @@
     }
   ],
   "config": {
-    "autoLayout": true,
+    "autoLayout": false,
     "deviceType": "desktop",
     "projectName": "学术论文写作全流程自动化平台",
-    "designLibrary": null
+    "designLibrary": null,
+    "visualEditorEnabled": true,
+    "showEdge": false
   }
 }
