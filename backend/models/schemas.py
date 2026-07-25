@@ -300,3 +300,41 @@ class TaskUpdateRequest(BaseModel):
     target_endpoint: str | None = Field(default=None, description="目标端点")
     payload: dict | None = Field(default=None, description="请求体")
     description: str | None = Field(default=None, description="任务描述")
+
+
+# ============================================================
+# 会话/对话相关模型
+# ============================================================
+
+class ChatMessage(BaseModel):
+    """聊天消息"""
+    role: str = Field(..., description="角色：user/assistant")
+    content: str = Field(..., description="消息内容")
+    timestamp: str = Field(default="", description="时间戳")
+    metadata: dict = Field(default_factory=dict, description="元数据")
+
+
+class ChatSession(BaseModel):
+    """聊天会话"""
+    session_id: str = Field(..., description="会话ID")
+    title: str = Field(default="新对话", description="会话标题")
+    messages: list[ChatMessage] = Field(default_factory=list, description="消息列表")
+    created_at: str = Field(default="", description="创建时间")
+    updated_at: str = Field(default="", description="更新时间")
+    project_data: dict = Field(default_factory=dict, description="项目相关数据")
+
+
+class ChatRequest(BaseModel):
+    """聊天请求"""
+    session_id: str = Field(default="", description="会话ID（新建则为空）")
+    message: str = Field(..., description="用户消息")
+    stream: bool = Field(default=False, description="是否流式响应")
+
+
+class ChatResponse(BaseModel):
+    """聊天响应"""
+    session_id: str = Field(..., description="会话ID")
+    message: str = Field(..., description="助手回复")
+    steps: list[dict] = Field(default_factory=list, description="执行步骤")
+    literature: list[dict] = Field(default_factory=list, description="文献结果")
+    metadata: dict = Field(default_factory=dict, description="元数据")

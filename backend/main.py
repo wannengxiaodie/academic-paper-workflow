@@ -19,6 +19,10 @@ from fastapi.responses import FileResponse
 import config
 from models.schemas import (
     ApiResponse,
+    ChatMessage,
+    ChatRequest,
+    ChatResponse,
+    ChatSession,
     GateCheckRequest,
     GenerateTemplateRequest,
     JournalMatchRequest,
@@ -30,6 +34,8 @@ from models.schemas import (
     TaskUpdateRequest,
     WriteChapterRequest,
 )
+import uuid
+from datetime import datetime
 
 # 配置日志
 logging.basicConfig(
@@ -63,6 +69,9 @@ _project_state: dict = {
     "final_paper": "",
 }
 
+# 会话存储（内存存储，生产环境应使用数据库）
+_sessions: dict[str, ChatSession] = {}
+
 
 def _update_state(key: str, value: object) -> None:
     """更新项目状态。"""
@@ -72,6 +81,40 @@ def _update_state(key: str, value: object) -> None:
 def _get_state(key: str, default=None):
     """获取项目状态。"""
     return _project_state.get(key, default)
+
+
+def _get_or_create_session(session_id: str = "") -> ChatSession:
+    """获取或创建会话。"""
+    now = datetime.now().isoformat()
+    if session_id and session_id in _sessions:
+        session = _sessions[session_id]
+        session.updated_at = now
+        return session
+    
+    new_id = session_id or str(uuid.uuid4())
+    session = ChatSession(
+        session_id=new_id,
+        title="新对话",
+        created_at=now,
+        updated_at=now,
+    )
+    _sessions[new_id] = session
+    return session
+
+
+def _add_message(session: ChatSession, role: str, content: str, metadata: dict = None) -> None:
+    """向会话添加消息。"""
+    message = ChatMessage(
+        role=role,
+        content=content,
+        timestamp=datetime.now().isoformat(),
+        metadata=metadata or {},
+    )
+    session.messages.append(message)
+    session.updated_at = datetime.now().isoformat()
+    
+    if role == "user" and session.title == "新对话" and content:
+        session.title = content[:20] + ("..." if len(content) > 20 else "")
 
 
 # ============================================================
@@ -483,9 +526,326 @@ async def health_check() -> dict:
     return {
         "status": "healthy",
         "service": "医学职称论文写作自动化平台",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "journals_loaded": _get_journals_count(),
     }
+
+
+# ============================================================
+# 对话式聊天 API（Agent 架构）
+# ============================================================
+
+@app.post("/api/chat", response_model=ApiResponse)
+async def chat_endpoint(request: ChatRequest) -> ApiResponse:
+    """
+    对话式聊天接口 - 基于 Agent 架构的智能交互。
+    
+    支持自然语言交互，自动识别用户意图并执行相应任务：
+    - 文献检索
+    - 大纲生成
+    - 章节写作
+    - 润色投稿
+    """
+    from agents.strategist import StrategistAgent
+    from agents.composer import ComposerAgent
+    
+    session = _get_or_create_session(request.session_id)
+    _add_message(session, "user", request.message)
+    
+    user_msg = request.message.strip()
+    steps = []
+    literature = []
+    response_text = ""
+    
+    try:
+        # 步骤1：理解需求
+        steps.append({"label": "理解需求", "status": "done"})
+        
+        # 步骤2：根据意图执行任务
+        if _is_literature_search_request(user_msg):
+            # 文献检索
+            steps.append({"label": "文献检索", "status": "active"})
+            
+            agent = StrategistAgent()
+            result = agent.review_literature(user_msg, max_results=10)
+            
+            literature = result.get("pubmed_results", [])
+            research_gaps = result.get("research_gaps", [])
+            
+            steps.append({"label": "文献检索", "status": "done"})
+            steps.append({"label": "分析整理", "status": "active"})
+            
+            response_text = _build_literature_response(user_msg, literature, research_gaps)
+            session.project_data["last_search"] = result
+            
+        elif _is_outline_request(user_msg):
+            # 大纲生成
+            steps.append({"label": "大纲生成", "status": "active"})
+            
+            agent = ComposerAgent()
+            topic = _extract_topic(user_msg)
+            result = agent.generate_template(
+                journal_name="中华医学杂志",
+                topic=topic,
+                study_type="临床试验",
+                title_level="副高级",
+            )
+            
+            steps.append({"label": "大纲生成", "status": "done"})
+            steps.append({"label": "整理输出", "status": "active"})
+            
+            response_text = _build_outline_response(topic, result)
+            session.project_data["outline"] = result
+            
+        elif _is_writing_request(user_msg):
+            # 论文写作
+            steps.append({"label": "内容生成", "status": "active"})
+            
+            response_text = _build_writing_response(user_msg)
+            
+        elif _is_polish_request(user_msg):
+            # 润色投稿
+            steps.append({"label": "润色检查", "status": "active"})
+            
+            response_text = _build_polish_response(user_msg)
+            
+        else:
+            # 通用对话
+            steps.append({"label": "分析回答", "status": "active"})
+            response_text = _build_general_response(user_msg)
+        
+        steps.append({"label": "生成结果", "status": "done"})
+        
+        # 更新会话
+        _add_message(session, "assistant", response_text, {
+            "steps": steps,
+            "literature_count": len(literature),
+        })
+        
+        return ApiResponse(
+            success=True,
+            message="对话完成",
+            data={
+                "session_id": session.session_id,
+                "title": session.title,
+                "message": response_text,
+                "steps": steps,
+                "literature": literature,
+            },
+        )
+        
+    except Exception as e:
+        logger.error(f"对话处理失败: {e}")
+        error_msg = f"抱歉，处理您的请求时出现了错误：{str(e)}"
+        _add_message(session, "assistant", error_msg)
+        return ApiResponse(
+            success=False,
+            message=error_msg,
+            data={
+                "session_id": session.session_id,
+            },
+        )
+
+
+@app.get("/api/sessions", response_model=ApiResponse)
+async def list_sessions() -> ApiResponse:
+    """获取会话列表。"""
+    sessions_list = sorted(
+        _sessions.values(),
+        key=lambda s: s.updated_at,
+        reverse=True,
+    )
+    return ApiResponse(
+        success=True,
+        message=f"共 {len(sessions_list)} 个会话",
+        data={
+            "sessions": [
+                {
+                    "session_id": s.session_id,
+                    "title": s.title,
+                    "updated_at": s.updated_at,
+                    "message_count": len(s.messages),
+                }
+                for s in sessions_list
+            ],
+        },
+    )
+
+
+@app.get("/api/sessions/{session_id}", response_model=ApiResponse)
+async def get_session(session_id: str) -> ApiResponse:
+    """获取单个会话详情。"""
+    session = _sessions.get(session_id)
+    if not session:
+        return ApiResponse(success=False, message="会话不存在")
+    return ApiResponse(
+        success=True,
+        message="查询成功",
+        data=session.model_dump(),
+    )
+
+
+@app.delete("/api/sessions/{session_id}", response_model=ApiResponse)
+async def delete_session(session_id: str) -> ApiResponse:
+    """删除会话。"""
+    if session_id in _sessions:
+        del _sessions[session_id]
+        return ApiResponse(success=True, message="会话已删除")
+    return ApiResponse(success=False, message="会话不存在")
+
+
+def _is_literature_search_request(msg: str) -> bool:
+    """判断是否为文献检索请求。"""
+    keywords = ["检索", "搜索", "文献", "研究进展", "综述", "找一下", "查一下",
+                "literature", "search", "paper", "研究", "最新"]
+    return any(kw in msg for kw in keywords)
+
+
+def _is_outline_request(msg: str) -> bool:
+    """判断是否为大纲生成请求。"""
+    keywords = ["大纲", "提纲", "结构", "目录", "框架", "outline", "生成论文"]
+    return any(kw in msg for kw in keywords) and not _is_writing_request(msg)
+
+
+def _is_writing_request(msg: str) -> bool:
+    """判断是否为论文写作请求。"""
+    keywords = ["写一篇", "写作", "生成论文", "撰写", "帮我写", "写论文",
+                "字左右", "字的论文", "完整论文"]
+    return any(kw in msg for kw in keywords)
+
+
+def _is_polish_request(msg: str) -> bool:
+    """判断是否为润色投稿请求。"""
+    keywords = ["润色", "修改", "检查", "投稿", "格式", "polish", "proofread"]
+    return any(kw in msg for kw in keywords)
+
+
+def _extract_topic(msg: str) -> str:
+    """从用户消息中提取研究主题。"""
+    import re
+    patterns = [
+        r"关于[「\"'](.+?)[」\"']",
+        r"「(.+?)」",
+        r"['\"](.+?)['\"]",
+        r"(?:主题|题目|研究)(?:是|为)?(.+?)(?:的|$)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, msg)
+        if match:
+            return match.group(1).strip()
+    
+    cleaned = re.sub(r"^(帮我|请|给我|生成|写|检索|搜索|查一下|找一下)", "", msg)
+    cleaned = re.sub(r"(的大纲|的论文|的文献|的研究进展|的最新进展)$", "", cleaned)
+    cleaned = re.sub(r"\d+字左右", "", cleaned)
+    return cleaned.strip() or "医学研究"
+
+
+def _build_literature_response(query: str, papers: list, gaps: list) -> str:
+    """构建文献检索响应。"""
+    response = f"根据您的研究主题「{query}」，我已完成文献检索和分析。\n\n"
+    
+    response += f"**📚 检索结果概览**\n"
+    response += f"共检索到 {len(papers)} 篇相关文献，识别到 {len(gaps)} 个潜在研究空白。\n\n"
+    
+    if gaps:
+        response += f"**💡 研究空白识别**\n"
+        for i, gap in enumerate(gaps[:3], 1):
+            desc = gap.get("gap_description", gap.get("description", "研究空白"))
+            direction = gap.get("research_direction", "")
+            response += f"{i}. {desc}\n"
+            if direction:
+                response += f"   建议方向：{direction}\n"
+            response += "\n"
+    
+    response += "**🔬 下一步建议**\n"
+    response += "1. 查看下方文献详情，了解当前研究现状\n"
+    response += "2. 基于研究空白确定您的创新点\n"
+    response += "3. 需要我帮您生成论文大纲吗？直接告诉我即可\n"
+    
+    return response
+
+
+def _build_outline_response(topic: str, result: dict) -> str:
+    """构建大纲生成响应。"""
+    outline = result.get("outline", [])
+    total_words = result.get("total_word_target", 0)
+    
+    response = f"已为您生成关于「{topic}」的论文大纲。\n\n"
+    response += f"**📋 大纲概览**\n"
+    response += f"共 {len(outline)} 个章节，目标字数约 {total_words} 字。\n\n"
+    
+    response += "**📑 论文章节结构**\n"
+    for i, section in enumerate(outline, 1):
+        title = section.get("title", f"第{i}章")
+        word_count = section.get("word_count_target", 0)
+        response += f"{i}. **{title}**（约 {word_count} 字）\n"
+        
+        subsections = section.get("subsections", [])
+        for j, sub in enumerate(subsections, 1):
+            sub_title = sub.get("title", "")
+            if sub_title:
+                response += f"   {i}.{j} {sub_title}\n"
+        response += "\n"
+    
+    response += "**✍️ 下一步**\n"
+    response += "- 需要我开始撰写某个章节吗？请告诉我章节名称\n"
+    response += "- 或者直接说「开始写作」，我将按顺序完成全文\n"
+    
+    return response
+
+
+def _build_writing_response(msg: str) -> str:
+    """构建写作响应。"""
+    return (
+        f"好的，我将为您撰写论文。\n\n"
+        f"**📝 写作说明**\n"
+        f"由于当前为演示模式，我将为您生成模板化的论文框架。"
+        f"如需 AI 生成高质量内容，请配置 API 密钥。\n\n"
+        f"**📋 论文结构**\n"
+        f"1. 摘要（约300字）\n"
+        f"2. 引言（约800字）\n"
+        f"3. 资料与方法（约1200字）\n"
+        f"4. 结果（约1000字）\n"
+        f"5. 讨论（约1000字）\n"
+        f"6. 结论（约300字）\n\n"
+        f"**💡 提示**\n"
+        f"您可以说「写摘要」或「写引言」来生成特定章节，"
+        f"或者说「继续」来按顺序写作。"
+    )
+
+
+def _build_polish_response(msg: str) -> str:
+    """构建润色响应。"""
+    return (
+        f"好的，我可以帮您润色论文。\n\n"
+        f"**✨ 润色服务包括**\n"
+        f"- 语言润色：优化表达、修正语法\n"
+        f"- 术语规范：统一医学术语使用\n"
+        f"- 格式检查：核对期刊投稿格式要求\n"
+        f"- 查重检测：初步相似度检测\n\n"
+        f"**📋 使用方法**\n"
+        f"请将您的论文内容粘贴到对话框中，"
+        f"我会为您进行全面的润色和检查。\n\n"
+        f"**💡 提示**\n"
+        f"如果您有目标期刊，也请告诉我，我会按照该期刊的要求进行格式调整。"
+    )
+
+
+def _build_general_response(msg: str) -> str:
+    """构建通用响应。"""
+    return (
+        f"您好！我是 MedPaper AI，您的医学论文写作助手。\n\n"
+        f"我可以帮您完成以下任务：\n\n"
+        f"🔬 **文献检索** - 检索 PubMed、OpenAlex 等数据库的最新文献\n"
+        f"📋 **大纲生成** - 根据研究主题智能生成论文结构\n"
+        f"✍️ **论文写作** - 自动生成完整的医学论文内容\n"
+        f"✨ **润色投稿** - 论文润色、术语修正、格式检查\n\n"
+        f"您可以直接告诉我您的需求，例如：\n"
+        f"- 「帮我检索一下糖尿病治疗的最新进展」\n"
+        f"- 「生成一篇关于肺癌靶向治疗的论文大纲」\n"
+        f"- 「写一篇3000字的高血压综述」\n\n"
+        f"请问有什么我可以帮您的吗？"
+    )
 
 
 # ============================================================
