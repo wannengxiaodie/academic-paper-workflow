@@ -1085,10 +1085,10 @@
             if (savedApi) {
                 return savedApi.replace(/\/$/, '') + '/api';
             }
-            if (window.location.hostname !== 'localhost' && window.location.protocol !== 'file:') {
-                return window.location.origin + '/api';
+            if (window.location.hostname === 'localhost' || window.location.protocol === 'file:') {
+                return 'http://localhost:8000/api';
             }
-            return 'http://localhost:8000/api';
+            return 'https://medpaper-api-5qb3.onrender.com/api';
         }
 
         let API_BASE = getApiBase();
